@@ -35,17 +35,17 @@ import { registerUser, login } from '../controllers/authController.js';
  *             schema:
  *               type: object
  *               properties:
- *                 token:
- *                   type: string
  *                 user:
  *                   type: object
  *                   properties:
- *                     id:
+ *                     _id:
  *                       type: string
  *                     name:
  *                       type: string
  *                     email:
  *                       type: string
+ *                 token:
+ *                   type: string
  *       400:
  *         description: User already exists
  */
@@ -81,17 +81,17 @@ router.post('/register', registerUser);
  *             schema:
  *               type: object
  *               properties:
- *                 token:
- *                   type: string
  *                 user:
  *                   type: object
  *                   properties:
- *                     id:
+ *                     _id:
  *                       type: string
  *                     name:
  *                       type: string
  *                     email:
  *                       type: string
+ *                 token:
+ *                   type: string
  *       400:
  *         description: Invalid email or password
  */
