@@ -1,6 +1,7 @@
-import { Router } from 'express';
-const router = Router();
+import express from "express";
 import { registerUser, login } from '../controllers/authController.js';
+
+const router = express.Router();
 
 /**
  * @swagger

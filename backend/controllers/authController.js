@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from '../models/userModel.js';
 import bcrypt  from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
 
@@ -30,7 +30,7 @@ export async function registerUser(req, res) {
     }
 };
 
-export async function login (req, res) {
+export async function login(req, res) {
     const { email, password } = req.body;
 
     try {

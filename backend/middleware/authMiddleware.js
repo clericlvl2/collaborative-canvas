@@ -6,11 +6,14 @@ export async function protect(req, res, next) {
         try {
             const token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, config.jwtSecret);
-            req.user = decoded.user;
+            req._id = decoded._id;
             next();
         }
         catch (error) {
             res.status(401).json({ message: 'Not authorized, no token' });
         }
+    }
+    else {
+        res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
