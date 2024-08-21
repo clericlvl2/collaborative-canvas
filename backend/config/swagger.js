@@ -4,7 +4,7 @@ import swaggerUi from "swagger-ui-express";
 export default function swaggerDocs(app, url, port) {
     const options = {
         definition: {
-            openapi: "3.1.0",
+            openapi: "3.0.0",
             info: {
                 title: "Collaborative Canvas API",
                 version: "1.0.0",
@@ -14,7 +14,16 @@ export default function swaggerDocs(app, url, port) {
                 {
                     url: `${url}:${port}/api`
                 }
-            ]
+            ],
+            components: {
+                securitySchemes: {
+                    bearerAuth: {
+                        type: "http",
+                        scheme: "bearer",
+                        bearerFormat: "JWT"
+                    }
+                }
+            }
         },
         apis: ["./routes/*.js"]
     };
