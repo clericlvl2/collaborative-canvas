@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
-import { createRoom } from "../controllers/roomController.js";
+import { createRoom, getRooms } from "../controllers/roomController.js";
 
 const router = express.Router();
 
@@ -65,5 +65,47 @@ const router = express.Router();
  *         description: Server error
  */
 router.post("/create", protect, createRoom);
+
+
+/**
+ * @swagger
+ * /rooms:
+ *   get:
+ *     summary: Get a list of all rooms
+ *     description: Retrieve a list of all rooms from the database.
+ *     tags: 
+ *       - Rooms
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of rooms
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   owner:
+ *                     type: string
+ *                   participants:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *       500:
+ *         description: Server error
+ */
+router.get("", protect, getRooms);
 
 export default router;
