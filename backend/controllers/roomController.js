@@ -19,3 +19,14 @@ export async function createRoom(req, res) {
         res.status(500).send("Failed to create room");
     }
 };
+
+export async function getRooms(req, res) {
+    try {
+        const rooms = await Room.find();
+        res.status(200).json(rooms);
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+};
