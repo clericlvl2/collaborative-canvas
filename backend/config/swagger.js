@@ -1,7 +1,7 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
-export default function swaggerDocs(app, url, port) {
+export default function swaggerDocs(app, url) {
     const options = {
         definition: {
             openapi: "3.0.0",
@@ -12,7 +12,7 @@ export default function swaggerDocs(app, url, port) {
             },
             servers: [
                 {
-                    url: `${url}:${port}/api`
+                    url: `${url}/api`
                 }
             ],
             components: {
@@ -31,5 +31,5 @@ export default function swaggerDocs(app, url, port) {
     const swaggerSpec = swaggerJSDoc(options);
     
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    console.log(`Swagger docs available at ${url}:${port}/api-docs`);
+    console.log(`Swagger docs available at ${url}/api-docs`);
 };
