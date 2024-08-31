@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /rooms/create:
+ * /rooms:
  *   post:
  *     summary: Create a new room
  *     description: Allows an authenticated user to create a new room.
@@ -64,7 +64,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.post("/create", protect, createRoom);
+router.post("", protect, createRoom);
 
 
 /**

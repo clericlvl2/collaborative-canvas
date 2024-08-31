@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import config from '../config/config.js';
+import config from '../config/env.js';
 
 export async function protect(req, res, next) {
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
