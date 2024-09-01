@@ -26,7 +26,20 @@ const roomSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    chatHistory: [
+        {
+            message: String,
+            sender: { 
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            timestamp: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ]
 });
 
 const Room = mongoose.model("Room", roomSchema);
