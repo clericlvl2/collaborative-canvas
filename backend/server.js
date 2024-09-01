@@ -1,6 +1,4 @@
 import express from "express";
-import http from "http";
-import { Server } from "socket.io";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
@@ -10,24 +8,16 @@ import setupSockets from "./sockets/index.js";
 
 const URL = config.url;
 const MONGO_URI = config.mongoUri;
+const IO_PORT = config.ioPort;
 
 connectDB(MONGO_URI);
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
-
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use("/api/rooms", roomRoutes);
 
-setupSockets(io);
-
+setupSockets(app, IO_PORT);
 swaggerDocs(app, URL);
 
 export default app;
