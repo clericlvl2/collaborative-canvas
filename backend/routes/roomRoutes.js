@@ -4,6 +4,8 @@ import { createRoom, getRooms } from "../controllers/roomController.js";
 
 const router = express.Router();
 
+router.use(protect);
+
 /**
  * @swagger
  * /rooms:
@@ -64,7 +66,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.post("", protect, createRoom);
+router.post("", createRoom);
 
 
 /**
@@ -106,6 +108,6 @@ router.post("", protect, createRoom);
  *       500:
  *         description: Server error
  */
-router.get("", protect, getRooms);
+router.get("", getRooms);
 
 export default router;
