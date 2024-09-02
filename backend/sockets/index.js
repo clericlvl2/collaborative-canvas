@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import handleRoomSockets from "./roomSocket.js";
 import handleCanvasSockets from "./canvasSocket.js";
 import handleChatSockets from "./chatSocket.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 export default function setupSockets(app, ioPort) {
     const server = http.createServer(app);
@@ -12,6 +13,8 @@ export default function setupSockets(app, ioPort) {
             methods: ["GET", "POST"]
         }
     });
+
+    io.engine.use(protect);
 
     io.on("connection", (socket) => {
         console.log(`User connected: ${socket.id}`);
@@ -23,6 +26,7 @@ export default function setupSockets(app, ioPort) {
         socket.on("disconnect", () => console.log(`User disconnected: ${socket.id}`));
     });
 
-    server.listen(ioPort);
-    console.log("Socket IO port:", ioPort);
+    server.listen(ioPort, () => {
+        console.log(`Socket IO is running on port ${ioPort}`);
+    });
 };

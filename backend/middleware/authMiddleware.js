@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/env.js';
 
-export async function protect(req, res, next) {
+export function protect(req, res, next) {
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
             const token = req.headers.authorization.split(' ')[1];
@@ -10,10 +10,20 @@ export async function protect(req, res, next) {
             next();
         }
         catch (error) {
-            res.status(401).json({ message: 'Not authorized, no token' });
+            if (res.constructor.name === "WebSocketResponse") {
+                return next(new Error("Not authorized, no token"));
+            }
+            else {
+                res.status(401).json({ message: 'Not authorized, no token' });
+            }
         }
     }
     else {
-        res.status(401).json({ message: 'Not authorized, no token' });
+        if (res.constructor.name === "WebSocketResponse") {
+            return next(new Error("Not authorized, no token"));
+        }
+        else {
+            res.status(401).json({ message: 'Not authorized, no token' });
+        }
     }
 };
