@@ -5,6 +5,7 @@ import roomRoutes from "./routes/roomRoutes.js";
 import swaggerDocs from "./config/swagger.js";
 import config from "./config/env.js";
 import setupSockets from "./sockets/index.js";
+import setupCors from "./config/cors.js";
 
 const URL = config.url;
 const MONGO_URI = config.mongoUri;
@@ -19,5 +20,6 @@ app.use("/api/rooms", roomRoutes);
 
 setupSockets(app, IO_PORT);
 swaggerDocs(app, URL);
+setupCors(app);
 
 export default app;
