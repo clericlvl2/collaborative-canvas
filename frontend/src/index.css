@@ -1,13 +1,12 @@
-:root {
-    background-color: #242424;
-    color: rgba(255, 255, 255, 0.87);
-    color-scheme: light dark;
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    font-synthesis: none;
-    font-weight: 400;
-    line-height: 1.5;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    -webkit-text-size-adjust: 100%;
+@import url("./vendor/fonts/fonts.css");
+
+html, body {
+    height: 100%;
+}
+
+.root {
+    margin: 0 auto;
+    max-width: 1280px;
+    min-height: 100vh;
+    min-width: 288px;
 }
