@@ -27,6 +27,18 @@ export async function getRooms(req, res) {
     }
     catch (error) {
         console.error(error.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Failed to retrieve rooms");
+    }
+};
+
+export async function deleteRoom(req, res) {
+    try {
+        const roomId = req.params.roomId;
+        await Room.findByIdAndDelete(roomId);
+        res.sendStatus(204);
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("Failed to delete room");
     }
 };
