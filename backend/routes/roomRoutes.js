@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
-import { createRoom, getRooms } from "../controllers/roomController.js";
+import { createRoom, deleteRoom, getRooms } from "../controllers/roomController.js";
 
 const router = express.Router();
 
@@ -109,5 +109,31 @@ router.post("", createRoom);
  *         description: Server error
  */
 router.get("", getRooms);
+
+
+/**
+ * @swagger
+ * /rooms/{roomId}:
+ *   delete:
+ *     summary: Delete a room
+ *     description: Delete a room by a specified room ID.
+ *     tags: 
+ *       - Rooms
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: roomId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the room to delete
+ *     responses:
+ *       204:
+ *         description: The room was deleted successfully.
+ *       500:
+ *         description: Server error.
+ */
+router.delete("/:roomId", deleteRoom);
 
 export default router;
