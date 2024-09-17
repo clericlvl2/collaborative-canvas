@@ -10,6 +10,7 @@ export function protect(req, res, next) {
             next();
         }
         catch (error) {
+            console.error(error.message);
             if (res.constructor.name === "WebSocketResponse") {
                 return next(new Error("Not authorized, no token"));
             }
