@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { type SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { getErrorMessage } from '../../common/errors/getErrorMessage';
 import { useErrorNotification } from '../../hooks/useErrorNotification';
 import { PagesRoutes } from '../../router/pages';
 import { useAppDispatch } from '../../store/hooks';
@@ -46,7 +47,7 @@ function Room({ id, title }: IRoomProps) {
         try {
             await dispatch(deleteRoom(id)).unwrap();
         } catch (e) {
-            showError(e.message);
+            showError(getErrorMessage(e));
         }
     };
 

@@ -1,32 +1,40 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import AuthAPI from '../../api/AuthAPI';
-import type { ILoginParams, IRegisterParams } from '../../api/shared/types';
+import type {
+    ILoginParams,
+    IRegisterParams,
+    IUser,
+    IUserAuthenticationData,
+} from '../../api/shared/types';
 import { ERROR_MESSAGE } from '../../common/constants';
-import { processError } from '../../common/processError';
+import type { IThunkApiConfig } from '../types';
+import { getSerializableError } from '../utils';
 
-export const executeLogin = createAsyncThunk(
-    'auth/login',
-    async (userForm: ILoginParams, { rejectWithValue }) => {
-        try {
-            return await AuthAPI.signIn(userForm);
-        } catch (e) {
-            const processedError = processError(e, ERROR_MESSAGE.LOGIN);
+export const executeLogin = createAsyncThunk<
+    IUserAuthenticationData,
+    ILoginParams,
+    IThunkApiConfig
+>('auth/login', async (userForm: ILoginParams, thunkApi) => {
+    try {
+        return await AuthAPI.signIn(userForm);
+    } catch (e) {
+        const error = getSerializableError(e, ERROR_MESSAGE.LOGIN);
 
-            return rejectWithValue(processedError);
-        }
+        return thunkApi.rejectWithValue(error);
     }
-);
+});
 
-export const executeRegister = createAsyncThunk(
-    'auth/register',
-    async (userForm: IRegisterParams, { rejectWithValue }) => {
-        try {
-            return await AuthAPI.signUp(userForm);
-        } catch (e) {
-            const processedError = processError(e, ERROR_MESSAGE.REGISTER);
+export const executeRegister = createAsyncThunk<
+    IUser,
+    IRegisterParams,
+    IThunkApiConfig
+>('auth/register', async (userForm: IRegisterParams, thunkApi) => {
+    try {
+        return await AuthAPI.signUp(userForm);
+    } catch (e) {
+        const error = getSerializableError(e, ERROR_MESSAGE.REGISTER);
 
-            return rejectWithValue(processedError);
-        }
+        return thunkApi.rejectWithValue(error);
     }
-);
+});

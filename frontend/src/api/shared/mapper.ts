@@ -13,6 +13,10 @@ export enum Mapper {
 }
 
 type IMapHandler = typeof mapHandler;
+type IMapHandlerKey = keyof IMapHandler;
+
+type IMapperParams<T extends IMapHandlerKey> = Parameters<IMapHandler[T]>[0];
+type IMapperResult<T extends IMapHandlerKey> = ReturnType<IMapHandler[T]>;
 
 export const userMapper = ({ _id, ...user }: IUserResponseData): IUser => ({
     ...user,
@@ -34,7 +38,13 @@ export const mapHandler = {
 } as const;
 
 // FIXME type error
-export const mapData = <T extends Mapper>(
-    data: Parameters<IMapHandler[T]>[0],
+export const mapData = <T extends IMapHandlerKey>(
+    data: IMapperParams<T>,
     type: T
-): ReturnType<IMapHandler[T]> => mapHandler[type](data);
+): IMapperResult<T> => {
+    const handler = mapHandler[type];
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return handler(data);
+};

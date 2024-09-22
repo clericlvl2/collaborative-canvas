@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { IRoom, IRooms } from '../../api/shared/types';
 import { RequestStatus } from '../../common/enums';
+import { getErrorMessage } from '../../common/errors/getErrorMessage';
 import type { INullable } from '../../common/types';
 import { createRoom, deleteRoom, fetchRooms } from './actions';
 
@@ -39,7 +40,7 @@ export const roomsSlice = createSlice({
             })
             .addCase(fetchRooms.rejected, (state, action) => {
                 state.status = RequestStatus.Failed;
-                state.error = action.payload.message as string;
+                state.error = getErrorMessage(action.payload);
             })
 
             // Create New Room

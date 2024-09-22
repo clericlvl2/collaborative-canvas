@@ -2,6 +2,7 @@ import Grid2 from '@mui/material/Grid2';
 import { useEffect } from 'react';
 
 import { RequestStatus } from '../../common/enums';
+import { getErrorMessage } from '../../common/errors/getErrorMessage';
 import { useErrorNotification } from '../../hooks/useErrorNotification';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchRooms } from '../../store/rooms/actions';
@@ -29,7 +30,7 @@ function RoomsGrid() {
         try {
             await dispatch(fetchRooms()).unwrap();
         } catch (e) {
-            showError(e.message);
+            showError(getErrorMessage(e));
         }
     };
 

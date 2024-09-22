@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { IUser } from '../../api/shared/types';
 import { RequestStatus } from '../../common/enums';
+import { getErrorMessage } from '../../common/errors/getErrorMessage';
 import type { INullable } from '../../common/types';
 import {
     LocalStorageService,
@@ -53,7 +54,7 @@ const authSlice = createSlice({
             })
             .addCase(executeLogin.rejected, (state, action) => {
                 state.status = RequestStatus.Failed;
-                state.error = action.payload.message as string;
+                state.error = getErrorMessage(action.payload);
             })
 
             // Register
@@ -67,7 +68,7 @@ const authSlice = createSlice({
             })
             .addCase(executeRegister.rejected, (state, action) => {
                 state.status = RequestStatus.Failed;
-                state.error = action.payload.message as string;
+                state.error = getErrorMessage(action.payload);
             });
     },
     selectors: {
