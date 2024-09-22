@@ -1,4 +1,5 @@
-import { Card, CardActionArea } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
 import type { ReactNode, SyntheticEvent } from 'react';
 
 interface ICardLayoutProps {
@@ -6,11 +7,17 @@ interface ICardLayoutProps {
     onClick: (e: SyntheticEvent) => void;
 }
 
-function CardLayout({ children, onClick }: ICardLayoutProps) {
+function RoomCardLayout({ children, onClick }: ICardLayoutProps) {
     return (
         <Card
             sx={{
                 height: 286,
+                ':hover': {
+                    '& .hover-button': {
+                        opacity: 0.8, // Reveal the button when card is hovered
+                        pointerEvents: 'auto', // Make the button clickable
+                    },
+                },
             }}
         >
             <CardActionArea
@@ -26,4 +33,4 @@ function CardLayout({ children, onClick }: ICardLayoutProps) {
     );
 }
 
-export default CardLayout;
+export default RoomCardLayout;

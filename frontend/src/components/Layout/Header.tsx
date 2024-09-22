@@ -2,17 +2,14 @@ import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import { useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth';
 import { PagesRoutes } from '../../router/pages';
 import { Logo } from '../Logo/Logo';
 import { NavigationLink } from '../NavigationLink/NavigationLink';
 
-// FIXME Header is not updating without useLocation
 export function Header() {
-    const { isAuthenticated } = useAuth();
-    const location = useLocation();
+    const { isLogged } = useAuth();
 
     return (
         <AppBar
@@ -31,14 +28,14 @@ export function Header() {
             >
                 <Logo />
 
-                {isAuthenticated && (
+                {isLogged && (
                     <Box sx={{ flexGrow: 0 }}>
                         <NavigationLink
                             to={PagesRoutes.Profile}
                             color="textPrimary"
                             underline="none"
                         >
-                            <Avatar alt="Remy Sharp" key={location.key} />
+                            <Avatar alt="Remy Sharp" />
                         </NavigationLink>
                     </Box>
                 )}

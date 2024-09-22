@@ -13,12 +13,12 @@ const USER_SCHEMAS = {
         .required('Password is required'),
 };
 
-export const signInUserSchema = object({
+export const loginUserSchema = object({
     email: USER_SCHEMAS.EMAIL,
     password: USER_SCHEMAS.PASSWORD,
 });
 
-export const signUpUserSchema = object({
+export const registerUserSchema = object({
     email: USER_SCHEMAS.EMAIL,
     password: USER_SCHEMAS.PASSWORD,
     name: USER_SCHEMAS.NAME,

@@ -1,43 +1,45 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { LoadingButton } from '@mui/lab';
-import { Grid2 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Grid2 from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { Form, Formik } from 'formik';
 import type { FormikConfig } from 'formik/dist/types';
 import { useNavigate } from 'react-router-dom';
 import type { InferType } from 'yup';
 
-import { useAuth } from '../../hooks/useAuth';
+import { useErrorNotification } from '../../hooks/useErrorNotification';
 import { PagesRoutes } from '../../router/pages';
+import { executeLogin } from '../../store/auth/actions';
+import { useAppDispatch } from '../../store/hooks';
 import { NavigationLink } from '../NavigationLink/NavigationLink';
-import { SIGN_IN_INPUTS } from './inputConfig';
+import { LOGIN_INPUTS } from './inputConfig';
 import { TextFieldConnected } from './TextFieldConnected';
-import { signInUserSchema as userValidationSchema } from './validation';
+import { loginUserSchema as userValidationSchema } from './validation';
 
 export type IUserForm = InferType<typeof userValidationSchema>;
-export type IOnSubmitUserCallback = FormikConfig<IUserForm>['onSubmit'];
+export type ISubmitHandler = FormikConfig<IUserForm>['onSubmit'];
 
 const INITIAL_USER_FORM: IUserForm = {
     email: '',
     password: '',
 };
 
-function SignIn() {
+function Login() {
     const navigate = useNavigate();
-    const auth = useAuth();
+    const dispatch = useAppDispatch();
+    const showError = useErrorNotification();
 
-    const handleSubmit: IOnSubmitUserCallback = async (formData, helpers) => {
-        const res = await auth.signIn(formData);
-
-        if (!res) {
-            return;
+    const handleSubmit: ISubmitHandler = async (formData, helpers) => {
+        try {
+            await dispatch(executeLogin(formData)).unwrap();
+            navigate(PagesRoutes.Rooms);
+            helpers.resetForm();
+        } catch (e) {
+            showError(e.message);
         }
-
-        navigate(PagesRoutes.Rooms);
-        helpers.resetForm();
     };
 
     return (
@@ -68,7 +70,7 @@ function SignIn() {
                 >
                     {formProps => (
                         <Form>
-                            {SIGN_IN_INPUTS.map(config => (
+                            {LOGIN_INPUTS.map(config => (
                                 <TextFieldConnected
                                     key={config.id}
                                     {...config}
@@ -96,4 +98,4 @@ function SignIn() {
     );
 }
 
-export default SignIn;
+export default Login;

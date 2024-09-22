@@ -6,16 +6,18 @@ import { Form, Formik } from 'formik';
 import type { FormikConfig } from 'formik/dist/types';
 import type { InferType } from 'yup';
 
-import type { ICreateRoomParams } from '../../api/shared/types';
-import { ROOM_CREATION_INPUTS } from './inputConfig';
+import { useAppDispatch } from '../../store/hooks';
+import { createRoom } from '../../store/rooms/actions';
+import { CREATE_ROOM_INPUTS } from './inputConfig';
 import { TextFieldConnected } from './TextFieldConnected';
 import { createRoomSchema as roomValidationSchema } from './validation';
 
 export type IUserForm = InferType<typeof roomValidationSchema>;
 export type IOnSubmitUserCallback = FormikConfig<IUserForm>['onSubmit'];
 
-interface IRoomCreationProps {
-    onSubmit: (params: ICreateRoomParams) => Promise<void>;
+interface ICreateRoomFormProps {
+    onSuccess: () => void;
+    onError: (error: unknown) => void;
     onCancel: () => void;
 }
 
@@ -23,10 +25,17 @@ const INITIAL_ROOM_FORM = {
     title: '',
 };
 
-function CreateRoom({ onSubmit, onCancel }: IRoomCreationProps) {
+function CreateRoom({ onSuccess, onCancel, onError }: ICreateRoomFormProps) {
+    const dispatch = useAppDispatch();
+
     const handleSubmit: IOnSubmitUserCallback = async (formData, helpers) => {
-        await onSubmit({ name: formData.title });
-        helpers.resetForm();
+        try {
+            await dispatch(createRoom({ name: formData.title })).unwrap();
+            helpers.resetForm();
+            onSuccess();
+        } catch (e) {
+            onError(e);
+        }
     };
 
     return (
@@ -60,7 +69,7 @@ function CreateRoom({ onSubmit, onCancel }: IRoomCreationProps) {
                                     height: '100%',
                                 }}
                             >
-                                {ROOM_CREATION_INPUTS.map(config => (
+                                {CREATE_ROOM_INPUTS.map(config => (
                                     <TextFieldConnected
                                         key={config.id}
                                         {...config}

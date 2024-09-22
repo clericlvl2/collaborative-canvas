@@ -1,4 +1,4 @@
-import { styled } from '@mui/system';
+import styled from '@mui/system/styled';
 import type { ReactNode } from 'react';
 
 import { Header } from './Header';

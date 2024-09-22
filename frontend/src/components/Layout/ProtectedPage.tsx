@@ -4,9 +4,9 @@ import { useAuth } from '../../hooks/useAuth';
 import { getPath, Pages } from '../../router/pages';
 
 function ProtectedPage() {
-    const { isAuthenticated } = useAuth();
+    const { isLogged } = useAuth();
 
-    return isAuthenticated ? (
+    return isLogged ? (
         <Outlet />
     ) : (
         <Navigate to={getPath(Pages.SignIn)} replace />

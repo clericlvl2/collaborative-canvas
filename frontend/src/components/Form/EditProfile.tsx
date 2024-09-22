@@ -1,5 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit';
-import { LoadingButton } from '@mui/lab';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,37 +8,36 @@ import Typography from '@mui/material/Typography';
 import { Form, Formik } from 'formik';
 import type { FormikConfig } from 'formik/dist/types';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import type { InferType } from 'yup';
 
-import { LocalStorageKey } from '../../common/enums';
-import { useAuth } from '../../hooks/useAuth';
 import { PagesRoutes } from '../../router/pages';
-import { PROFILE_EDITING_INPUTS } from './inputConfig';
+import { loggedOut, selectUser } from '../../store/auth/auth';
+import { useAppDispatch } from '../../store/hooks';
+import { EDIT_PROFILE_INPUTS } from './inputConfig';
 import { TextFieldConnected } from './TextFieldConnected';
 import { editUserSchema as userValidationSchema } from './validation';
 
 export type IUserForm = InferType<typeof userValidationSchema>;
 export type IOnSubmitUserCallback = FormikConfig<IUserForm>['onSubmit'];
 
-const readUserDataFromLocalStorage = () => {
-    return {
-        name: localStorage.getItem(LocalStorageKey.UserName) ?? '',
-        email: localStorage.getItem(LocalStorageKey.UserEmail) ?? '',
-    };
-};
-
 function EditProfile() {
-    const auth = useAuth();
     const navigate = useNavigate();
-    const initialUser = useMemo(() => readUserDataFromLocalStorage(), []);
+    const dispatch = useAppDispatch();
+    const user = useSelector(selectUser);
 
-    const handleSignOut = async () => {
-        const result = await auth.signOut();
+    const initialUser = useMemo(
+        () => ({
+            name: user?.name ?? '',
+            email: user?.email ?? '',
+        }),
+        [user]
+    );
 
-        if (result) {
-            navigate(PagesRoutes.SignIn);
-        }
+    const handleSignOut = () => {
+        dispatch(loggedOut());
+        navigate(PagesRoutes.SignIn);
     };
 
     const handleSubmit: IOnSubmitUserCallback = async () => {
@@ -73,7 +72,7 @@ function EditProfile() {
                 >
                     {formProps => (
                         <Form>
-                            {PROFILE_EDITING_INPUTS.map(config => (
+                            {EDIT_PROFILE_INPUTS.map(config => (
                                 <TextFieldConnected
                                     key={config.id}
                                     {...config}

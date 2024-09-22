@@ -30,7 +30,7 @@ const USER_INPUTS_CONFIGS = {
     },
 } as const;
 
-const ROOM_INPUTS_CONFIGS = {
+const ROOMS_INPUTS_CONFIGS = {
     TITLE_FIELD: {
         margin: 'normal',
         fullWidth: true,
@@ -42,22 +42,22 @@ const ROOM_INPUTS_CONFIGS = {
     },
 } as const;
 
-export const SIGN_IN_INPUTS: ITextField[] = [
+export const LOGIN_INPUTS: ITextField[] = [
     USER_INPUTS_CONFIGS.EMAIL_FIELD,
     USER_INPUTS_CONFIGS.PASSWORD_FIELD,
 ];
 
-export const SIGN_UP_INPUTS: ITextField[] = [
+export const REGISTER_INPUTS: ITextField[] = [
     USER_INPUTS_CONFIGS.NAME_FIELD,
     USER_INPUTS_CONFIGS.EMAIL_FIELD,
     USER_INPUTS_CONFIGS.PASSWORD_FIELD,
 ];
 
-export const PROFILE_EDITING_INPUTS: ITextField[] = [
+export const EDIT_PROFILE_INPUTS: ITextField[] = [
     USER_INPUTS_CONFIGS.NAME_FIELD,
     USER_INPUTS_CONFIGS.EMAIL_FIELD,
 ];
 
-export const ROOM_CREATION_INPUTS: ITextField[] = [
-    ROOM_INPUTS_CONFIGS.TITLE_FIELD,
+export const CREATE_ROOM_INPUTS: ITextField[] = [
+    ROOMS_INPUTS_CONFIGS.TITLE_FIELD,
 ];

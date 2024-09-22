@@ -1,5 +1,6 @@
-export enum LocalStorageKey {
-    AuthToken = 'AuthToken',
-    UserName = 'UserName',
-    UserEmail = 'UserEmail',
+export enum RequestStatus {
+    Idle = 'idle',
+    Loading = 'loading',
+    Completed = 'completed',
+    Failed = 'failed',
 }

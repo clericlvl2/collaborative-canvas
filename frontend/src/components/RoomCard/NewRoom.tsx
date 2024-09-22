@@ -1,27 +1,17 @@
 import AddIcon from '@mui/icons-material/Add';
-import { alpha, Box, CardContent, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import CardContent from '@mui/material/CardContent';
+import { alpha } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
-import type { IRoomResponseData as IRoom } from '../../api/shared/types';
-import { useRoomDialog } from '../RoomDialog/useRoomDialog';
-import CardLayout from './CardLayout';
+import RoomCardLayout from './RoomCardLayout';
+import { useNewRoomDialog } from './useNewRoomDialog';
 
-interface INewRoomProps {
-    onCreate: (data: IRoom) => void;
-}
-
-function NewRoom({ onCreate }: INewRoomProps) {
-    const { open: openFormDialog } = useRoomDialog();
-
-    const handleCardClick = async () => {
-        const result = await openFormDialog();
-
-        if (result) {
-            onCreate(result);
-        }
-    };
+function NewRoom() {
+    const { open: openFormDialog } = useNewRoomDialog();
 
     return (
-        <CardLayout onClick={handleCardClick}>
+        <RoomCardLayout onClick={openFormDialog}>
             <Box
                 sx={{
                     height: 140,
@@ -46,7 +36,7 @@ function NewRoom({ onCreate }: INewRoomProps) {
                     Create a space for collaborative work with your colleagues
                 </Typography>
             </CardContent>
-        </CardLayout>
+        </RoomCardLayout>
     );
 }
 

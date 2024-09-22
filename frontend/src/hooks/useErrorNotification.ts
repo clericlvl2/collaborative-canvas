@@ -1,5 +1,4 @@
 import { useNotifications } from '@toolpad/core/useNotifications';
-import { AxiosError } from 'axios';
 import { useCallback } from 'react';
 
 import { ERROR_MESSAGE } from '../common/constants';
@@ -15,17 +14,11 @@ export const useErrorNotification = () => {
     const { show } = useNotifications();
 
     const showError = useCallback(
-        (e: unknown, message: string) => {
-            let errorMessage = ERROR_MESSAGE.UNKNOWN;
-
-            if (e instanceof AxiosError) {
-                errorMessage = `${message} (${e.code})`;
-            }
-
-            show(errorMessage, ERROR_NOTIFICATION_OPTIONS);
+        (message: string = ERROR_MESSAGE.UNKNOWN) => {
+            show(message, ERROR_NOTIFICATION_OPTIONS);
         },
         [show]
     );
 
-    return { showError };
+    return showError;
 };
