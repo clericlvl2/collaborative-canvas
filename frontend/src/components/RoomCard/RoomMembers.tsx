@@ -1,4 +1,4 @@
-import { AvatarGroup } from '@mui/material';
+import AvatarGroup from '@mui/material/AvatarGroup';
 
 import RemyAvatar from '../../vendor/images/avatars/1.jpg';
 import TravisAvatar from '../../vendor/images/avatars/2.jpg';

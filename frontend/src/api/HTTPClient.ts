@@ -1,30 +1,68 @@
-import axios from 'axios';
+import axios, {
+    type AxiosInstance,
+    type AxiosInterceptorManager,
+    type InternalAxiosRequestConfig,
+} from 'axios';
 
-import { LocalStorageKey } from '../common/enums';
+import {
+    LocalStorageService,
+    StorageKey,
+} from '../services/LocalStorageService';
 import { BASE_API_URL } from './shared/constants';
 
-class HTTPClient {
-    private static readonly _instance = axios.create({ baseURL: BASE_API_URL });
+export interface IClientOptions {
+    baseURL?: string;
+}
 
-    static getInstance() {
+type IRequestInterceptor = AxiosInterceptorManager<InternalAxiosRequestConfig>;
+type IRequestInterceptorParameters = Parameters<IRequestInterceptor['use']>;
+
+class HTTPClient {
+    private readonly _instance: AxiosInstance = axios.create({
+        baseURL: BASE_API_URL,
+    });
+
+    constructor({ baseURL }: IClientOptions) {
+        this._instance = axios.create({ baseURL });
+    }
+
+    getClient() {
         return this._instance;
     }
 
-    static setHeadersField(field: string, value: string): void {
-        this._instance.defaults.headers.common[field] = value;
+    setRequestInterceptor(
+        onFulfilled: IRequestInterceptorParameters[0],
+        onRejected: IRequestInterceptorParameters[1]
+    ) {
+        this._instance.interceptors.request.use(onFulfilled, onRejected);
     }
 
-    static removeHeadersField(field: string): void {
-        this._instance.defaults.headers.common[field] = undefined;
+    clearRequestInterceptors() {
+        this._instance.interceptors.request.clear();
     }
 }
 
-(function () {
-    const token = localStorage.getItem(LocalStorageKey.AuthToken);
+const setAuthorizationInterceptor = (httpClient: HTTPClient) => {
+    httpClient.setRequestInterceptor(
+        config => {
+            const token = LocalStorageService.get(StorageKey.Token);
 
-    if (token) {
-        HTTPClient.setHeadersField('Authorization', `Bearer ${token}`);
-    }
-})();
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
 
-export default HTTPClient;
+            return config;
+        },
+        error => {
+            return Promise.reject(error);
+        }
+    );
+};
+
+const client = new HTTPClient({
+    baseURL: BASE_API_URL,
+});
+
+setAuthorizationInterceptor(client);
+
+export default client;

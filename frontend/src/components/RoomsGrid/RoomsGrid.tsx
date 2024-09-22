@@ -1,44 +1,49 @@
-import { Backdrop, CircularProgress, Grid2 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import Grid2 from '@mui/material/Grid2';
+import { useEffect } from 'react';
 
-import type { IRoomResponseData as IRoom } from '../../api/shared/types';
-import { useRooms } from '../../hooks/useRooms';
+import { RequestStatus } from '../../common/enums';
+import { useErrorNotification } from '../../hooks/useErrorNotification';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchRooms } from '../../store/rooms/actions';
+import {
+    selectAllRooms,
+    selectRoomsError,
+    selectRoomsStatus,
+} from '../../store/rooms/rooms';
+import PageLoader from '../Loader/PageLoader';
 import NewRoom from '../RoomCard/NewRoom';
 import Room from '../RoomCard/Room';
-import RoomContainer from './RoomContainer';
+import ErrorFallback from './ErrorFallback';
+import RoomsGridItem from './RoomsGridItem';
 
 function RoomsGrid() {
-    const [rooms, setRooms] = useState<IRoom[]>([]);
-    const { isLoading, getRooms } = useRooms();
+    const dispatch = useAppDispatch();
+    const rooms = useAppSelector(selectAllRooms);
+    const status = useAppSelector(selectRoomsStatus);
+    const error = useAppSelector(selectRoomsError);
+    const showError = useErrorNotification();
+
+    const isLoading = status === RequestStatus.Loading;
+
+    const fetchGridData = async () => {
+        try {
+            await dispatch(fetchRooms()).unwrap();
+        } catch (e) {
+            showError(e.message);
+        }
+    };
 
     useEffect(() => {
-        const initRooms = async () => {
-            const data = await getRooms();
-
-            if (data) {
-                setRooms(data);
-            }
-        };
-
-        initRooms();
-    }, [getRooms]);
+        fetchGridData();
+    }, []);
 
     if (isLoading) {
-        return (
-            <Backdrop
-                open
-                sx={{
-                    background: '#FFF',
-                }}
-            >
-                <CircularProgress color="primary" />
-            </Backdrop>
-        );
+        return <PageLoader />;
     }
 
-    const handleRoomCreate = (room: IRoom) => {
-        setRooms(state => [...state, room]);
-    };
+    if (error) {
+        return <ErrorFallback onRetry={fetchGridData} />;
+    }
 
     const hasRooms = rooms.length > 0;
 
@@ -53,13 +58,13 @@ function RoomsGrid() {
         >
             <>
                 {rooms.map(room => (
-                    <RoomContainer key={room._id}>
-                        <Room id={room._id} title={room.name} />
-                    </RoomContainer>
+                    <RoomsGridItem key={room.id}>
+                        <Room id={room.id} title={room.name} />
+                    </RoomsGridItem>
                 ))}
-                <RoomContainer>
-                    <NewRoom onCreate={handleRoomCreate} />
-                </RoomContainer>
+                <RoomsGridItem>
+                    <NewRoom />
+                </RoomsGridItem>
             </>
         </Grid2>
     );

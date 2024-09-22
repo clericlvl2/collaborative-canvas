@@ -3,24 +3,21 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DialogProps } from '@toolpad/core/useDialogs';
 
-import type { ICreateRoomParams } from '../../api/shared/types';
+import { ERROR_MESSAGE } from '../../common/constants';
 import CreateRoom from '../Form/CreateRoom';
 import type { IDialogResult, IRoomDialogProps } from './types';
 
-function RoomDialog({
-    payload,
+function NewRoomDialog({
     open,
     onClose,
+    payload,
 }: DialogProps<IRoomDialogProps, IDialogResult>) {
-    const closeDialog = () => onClose(false);
-
-    const handleSubmit = async (data: ICreateRoomParams) => {
-        const res = await payload.onSubmit(data);
-        onClose(res);
+    const handleError = (e: unknown) => {
+        payload.onError?.(e, ERROR_MESSAGE.CREATE_ROOM);
     };
 
     return (
-        <Dialog open={open} onClose={closeDialog}>
+        <Dialog open={open} onClose={() => onClose(false)} aria-hidden={false}>
             <DialogTitle
                 sx={{
                     textAlign: 'center',
@@ -29,10 +26,14 @@ function RoomDialog({
                 Create Room
             </DialogTitle>
             <DialogContent>
-                <CreateRoom onSubmit={handleSubmit} onCancel={closeDialog} />
+                <CreateRoom
+                    onSuccess={() => onClose(true)}
+                    onError={handleError}
+                    onCancel={() => onClose(false)}
+                />
             </DialogContent>
         </Dialog>
     );
 }
 
-export default RoomDialog;
+export default NewRoomDialog;

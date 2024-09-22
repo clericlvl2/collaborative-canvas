@@ -1,10 +1,10 @@
-export interface ISignUpParams {
+export interface IRegisterParams {
     name: string;
     email: string;
     password: string;
 }
 
-export interface ISignInParams {
+export interface ILoginParams {
     email: string;
     password: string;
 }
@@ -15,7 +15,16 @@ export interface IUserResponseData {
     email: string;
 }
 
-export interface IUserResponse {
+export interface IUser extends Omit<IUserResponseData, '_id'> {
+    id: string;
+}
+
+export interface IUserAuthenticationData {
+    user: IUser;
+    token: string;
+}
+
+export interface ILoginResponse {
     user: IUserResponseData;
     token: string;
 }
@@ -34,3 +43,9 @@ export interface IRoomResponseData {
 }
 
 export type IRoomsResponseData = IRoomResponseData[];
+
+export interface IRoom extends Omit<IRoomResponseData, '_id'> {
+    id: string;
+}
+
+export type IRooms = IRoom[];

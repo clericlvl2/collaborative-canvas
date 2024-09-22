@@ -1,17 +1,20 @@
-import {
-    Box,
-    Button,
-    CardActions,
-    CardContent,
-    CardMedia,
-    Typography,
-} from '@mui/material';
-import type { SyntheticEvent } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { type SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useErrorNotification } from '../../hooks/useErrorNotification';
 import { PagesRoutes } from '../../router/pages';
+import { useAppDispatch } from '../../store/hooks';
+import { deleteRoom } from '../../store/rooms/actions';
 import roomPlaceholderImage from '../../vendor/images/roomPlaceholder.jpg';
-import CardLayout from './CardLayout';
+import RoomCardLayout from './RoomCardLayout';
 import RoomMembers from './RoomMembers';
 
 interface IRoomProps {
@@ -21,6 +24,8 @@ interface IRoomProps {
 
 function Room({ id, title }: IRoomProps) {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const showError = useErrorNotification();
 
     const handleLinkCopy = (e: SyntheticEvent) => {
         e.stopPropagation();
@@ -35,9 +40,19 @@ function Room({ id, title }: IRoomProps) {
         });
     };
 
+    const handleRemoveClick = async (e: SyntheticEvent) => {
+        e.stopPropagation();
+
+        try {
+            await dispatch(deleteRoom(id)).unwrap();
+        } catch (e) {
+            showError(e.message);
+        }
+    };
+
     return (
         <>
-            <CardLayout onClick={handleCardClick}>
+            <RoomCardLayout onClick={handleCardClick}>
                 <CardMedia
                     sx={{ height: 140 }}
                     image={roomPlaceholderImage}
@@ -74,7 +89,23 @@ function Room({ id, title }: IRoomProps) {
                     </CardActions>
                     <RoomMembers />
                 </Box>
-            </CardLayout>
+                <IconButton
+                    onClick={handleRemoveClick}
+                    disableRipple
+                    className="hover-button"
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        background: 'none',
+                        opacity: 0, // Initially invisible
+                        transition: 'opacity 0.3s ease',
+                        pointerEvents: 'none', // Prevents button from being clickable when hidden
+                    }}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            </RoomCardLayout>
         </>
     );
 }

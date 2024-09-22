@@ -1,21 +1,21 @@
 import { useDialogs } from '@toolpad/core/useDialogs';
 import { useCallback, useRef } from 'react';
 
-import type { ICreateRoomParams } from '../../api/shared/types';
 import type { INullable } from '../../common/types';
-import { useRooms } from '../../hooks/useRooms';
-import RoomDialog from './RoomDialog';
+import { useErrorNotification } from '../../hooks/useErrorNotification';
+import NewRoomDialog from './NewRoomDialog';
 import type { IDialogResult, IRoomDialogProps } from './types';
 
-export const useRoomDialog = () => {
+export const useNewRoomDialog = () => {
     const { open, close } = useDialogs();
-    const { createRoom } = useRooms();
-
     const dialogPromiseRef = useRef<INullable<Promise<IDialogResult>>>(null);
+    const showError = useErrorNotification();
 
-    const handleSubmit = useCallback(
-        async (data: ICreateRoomParams) => createRoom(data),
-        [createRoom]
+    const handleError = useCallback(
+        (error: unknown) => {
+            showError(error.message);
+        },
+        [showError]
     );
 
     const handleClose = useCallback(async () => {
@@ -30,16 +30,16 @@ export const useRoomDialog = () => {
 
     const handleOpen = useCallback(() => {
         const dialogPromise = open<IRoomDialogProps, IDialogResult>(
-            RoomDialog,
+            NewRoomDialog,
             {
-                onSubmit: handleSubmit,
+                onError: handleError,
             }
         );
 
         dialogPromiseRef.current = dialogPromise;
 
         return dialogPromise;
-    }, [open, handleSubmit]);
+    }, [open, handleError]);
 
     return {
         open: handleOpen,

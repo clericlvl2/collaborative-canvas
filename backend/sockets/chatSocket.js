@@ -8,6 +8,7 @@ export default function handleChatSockets(io, socket) {
             socket.to(roomId).emit("chatMessage", newMessage);
         }
         catch (error) {
+            console.error(error.message);
             socket.emit("error", "Could not save message");
         }
     });

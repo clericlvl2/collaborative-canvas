@@ -1,4 +1,4 @@
-import { Avatar, type AvatarProps } from '@mui/material';
+import Avatar, { type AvatarProps } from '@mui/material/Avatar';
 
 import { AVATAR_SIZE_STYLE } from './constants';
 
