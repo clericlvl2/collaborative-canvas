@@ -1,6 +1,7 @@
 import { useDialogs } from '@toolpad/core/useDialogs';
 import { useCallback, useRef } from 'react';
 
+import { getErrorMessage } from '../../common/errors/getErrorMessage';
 import type { INullable } from '../../common/types';
 import { useErrorNotification } from '../../hooks/useErrorNotification';
 import NewRoomDialog from './NewRoomDialog';
@@ -12,9 +13,7 @@ export const useNewRoomDialog = () => {
     const showError = useErrorNotification();
 
     const handleError = useCallback(
-        (error: unknown) => {
-            showError(error.message);
-        },
+        (e: unknown) => showError(getErrorMessage(e)),
         [showError]
     );
 

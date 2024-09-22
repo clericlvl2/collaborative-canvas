@@ -1,29 +1,29 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import RoomsAPI from '../../api/RoomsAPI';
-import type { ICreateRoomParams, IRoom } from '../../api/shared/types';
+import type { ICreateRoomParams, IRoom, IRooms } from '../../api/shared/types';
 import { ERROR_MESSAGE } from '../../common/constants';
 import { RequestStatus } from '../../common/enums';
-import { processError } from '../../common/processError';
 import { selectAuthStatus } from '../auth/auth';
-import type { IRootState } from '../store';
+import type { IThunkApiConfig } from '../types';
+import { getSerializableError } from '../utils';
 
 type IRoomId = IRoom['id'];
 
-export const fetchRooms = createAsyncThunk(
+export const fetchRooms = createAsyncThunk<IRooms, void, IThunkApiConfig>(
     'rooms/fetchRooms',
-    async (_, { rejectWithValue }) => {
+    async (_, thunkApi) => {
         try {
             return await RoomsAPI.getRooms();
         } catch (e) {
-            const processedError = processError(e, ERROR_MESSAGE.FETCH_ROOMS);
+            const error = getSerializableError(e, ERROR_MESSAGE.FETCH_ROOMS);
 
-            return rejectWithValue(processedError);
+            return thunkApi.rejectWithValue(error);
         }
     },
     {
         condition: (_, thunkApi) => {
-            const status = selectAuthStatus(thunkApi.getState() as IRootState);
+            const status = selectAuthStatus(thunkApi.getState());
 
             if (status !== RequestStatus.Idle) {
                 return false;
@@ -32,28 +32,29 @@ export const fetchRooms = createAsyncThunk(
     }
 );
 
-export const createRoom = createAsyncThunk(
-    'rooms/createRoom',
-    async (data: ICreateRoomParams, { rejectWithValue }) => {
-        try {
-            return await RoomsAPI.createRoom(data);
-        } catch (e) {
-            const processedError = processError(e, ERROR_MESSAGE.CREATE_ROOM);
+export const createRoom = createAsyncThunk<
+    IRoom,
+    ICreateRoomParams,
+    IThunkApiConfig
+>('rooms/createRoom', async (data: ICreateRoomParams, thunkApi) => {
+    try {
+        return await RoomsAPI.createRoom(data);
+    } catch (e) {
+        const error = getSerializableError(e, ERROR_MESSAGE.CREATE_ROOM);
 
-            return rejectWithValue(processedError);
-        }
+        return thunkApi.rejectWithValue(error);
     }
-);
+});
 
-export const deleteRoom = createAsyncThunk(
+export const deleteRoom = createAsyncThunk<IRoomId, IRoomId, IThunkApiConfig>(
     'rooms/deleteRoom',
-    async (id: IRoomId, { rejectWithValue }) => {
+    async (id: IRoomId, thunkApi) => {
         try {
             return await RoomsAPI.deleteRoom(id);
         } catch (e) {
-            const processedError = processError(e, ERROR_MESSAGE.DELETE_ROOM);
+            const error = getSerializableError(e, ERROR_MESSAGE.DELETE_ROOM);
 
-            return rejectWithValue(processedError);
+            return thunkApi.rejectWithValue(error);
         }
     }
 );

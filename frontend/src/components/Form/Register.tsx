@@ -10,6 +10,7 @@ import type { FormikConfig } from 'formik/dist/types';
 import { useNavigate } from 'react-router-dom';
 import type { InferType } from 'yup';
 
+import { getErrorMessage } from '../../common/errors/getErrorMessage';
 import { useErrorNotification } from '../../hooks/useErrorNotification';
 import { PagesRoutes } from '../../router/pages';
 import { executeRegister } from '../../store/auth/actions';
@@ -39,7 +40,7 @@ function Register() {
             navigate(PagesRoutes.SignIn);
             helpers.resetForm();
         } catch (e) {
-            showError(e.message);
+            showError(getErrorMessage(e));
         }
     };
 
