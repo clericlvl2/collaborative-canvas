@@ -1,8 +1,9 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import { Application } from "express";
 
-export default function swaggerDocs(app, url) {
-    const options = {
+export default function swaggerDocs(app: Application): void {
+    const options: swaggerJSDoc.OAS3Options = {
         definition: {
             openapi: "3.0.0",
             info: {
@@ -12,7 +13,10 @@ export default function swaggerDocs(app, url) {
             },
             servers: [
                 {
-                    url: `${url}/api`
+                    url: "https://collaborative-canvas/api"
+                },
+                {
+                    url: "http://localhost:5000/api"
                 }
             ],
             components: {
@@ -25,11 +29,11 @@ export default function swaggerDocs(app, url) {
                 }
             }
         },
-        apis: ["./routes/*.js"]
+        apis: ["./dist/routes/*.js"]
     };
     
-    const swaggerSpec = swaggerJSDoc(options);
+    const swaggerSpec: swaggerUi.JsonObject = swaggerJSDoc(options);
     
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    console.log(`Swagger docs available at ${url}/api-docs`);
+    console.log("Swagger docs available at /api-docs");
 };
