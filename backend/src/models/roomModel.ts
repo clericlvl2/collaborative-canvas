@@ -1,18 +1,34 @@
-import mongoose from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
-const roomSchema = new mongoose.Schema({
+export interface IChatMessage {
+    message: string;
+    sender: Types.ObjectId;
+    timestamp?: Date;
+}
+
+export interface IRoom {
+    name: string;
+    owner: Types.ObjectId;
+    participants?: Types.ObjectId[];
+    canvasData?: string;
+    createdAt: Date;
+    updatedAt: Date;
+    chatHistory: IChatMessage[];
+}
+
+const roomSchema = new Schema<IRoom>({
     name: {
         type: String,
         required: true
     },
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
     participants: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "User"
         }
     ],
@@ -31,7 +47,7 @@ const roomSchema = new mongoose.Schema({
         {
             message: String,
             sender: { 
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: "User"
             },
             timestamp: {
@@ -42,5 +58,5 @@ const roomSchema = new mongoose.Schema({
     ]
 });
 
-const Room = mongoose.model("Room", roomSchema);
+const Room = model<IRoom>("Room", roomSchema);
 export default Room;

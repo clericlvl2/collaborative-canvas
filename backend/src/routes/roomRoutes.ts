@@ -68,7 +68,6 @@ router.use(protect);
  */
 router.post("", createRoom);
 
-
 /**
  * @swagger
  * /rooms:
@@ -105,11 +104,12 @@ router.post("", createRoom);
  *                   updatedAt:
  *                     type: string
  *                     format: date-time
+ *       401:
+ *         description: Unauthorized, invalid or missing token
  *       500:
  *         description: Server error
  */
 router.get("", getRooms);
-
 
 /**
  * @swagger
@@ -131,6 +131,8 @@ router.get("", getRooms);
  *     responses:
  *       204:
  *         description: The room was deleted successfully.
+ *       401:
+ *         description: Unauthorized, invalid or missing token
  *       500:
  *         description: Server error.
  */

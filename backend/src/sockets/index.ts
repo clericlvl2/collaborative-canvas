@@ -4,8 +4,9 @@ import handleRoomSockets from "./roomSocket.js";
 import handleCanvasSockets from "./canvasSocket.js";
 import handleChatSockets from "./chatSocket.js";
 import { protect } from "../middleware/authMiddleware.js";
+import { Application } from "express";
 
-export default function setupSockets(app, ioPort) {
+export default function setupSockets(app: Application, ioPort: number): void {
     const server = http.createServer(app);
     const io = new Server(server, {
         cors: {
