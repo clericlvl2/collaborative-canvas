@@ -13,7 +13,7 @@ export default function swaggerDocs(app: Application): void {
             },
             servers: [
                 {
-                    url: "https://collaborative-canvas/api"
+                    url: "https://collaborative-canvas.com/api"
                 },
                 {
                     url: "http://localhost:5000/api"
