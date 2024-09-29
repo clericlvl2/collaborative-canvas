@@ -5,7 +5,7 @@ import { Types } from 'mongoose';
 
 export async function createRoom(req: CustomRequest, res: Response): Promise<void> {
     try {
-        const { name }: { name: string} = req.body;
+        const { name }: { name: string } = req.body;
         const ownerId: Types.ObjectId | undefined = req._id;
 
         if (!ownerId) {

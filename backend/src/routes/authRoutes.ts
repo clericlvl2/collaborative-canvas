@@ -1,5 +1,6 @@
 import express from "express";
-import { registerUser, login } from '../controllers/authController.js';
+import { registerUser, login, logout } from '../controllers/authController.js';
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -97,5 +98,24 @@ router.post('/register', registerUser);
  *         description: Invalid email or password
  */
 router.post('/login', login);
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: User logout
+ *     description: Logout a user by the passed token.
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       204:
+ *         description: The session was deleted successfully.
+ *       401:
+ *         description: Unauthorized, invalid or missing token
+ *       500:
+ *         description: Server error.
+ */
+router.post('/logout', protect, logout);
 
 export default router;

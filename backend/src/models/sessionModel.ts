@@ -1,19 +1,20 @@
 import { Schema, model, Types } from "mongoose";
 
-export interface ISession {
-    user: Types.ObjectId;
+export interface SessionModel {
     token: string;
+    user: Types.ObjectId;
     createdAt: Date;
 }
 
-const SessionSchema = new Schema<ISession>({
+const SessionSchema = new Schema<SessionModel>({
+    token: {
+        type: String,
+        required: true,
+        unique: true
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        required: true
-    },
-    token: {
-        type: String,
         required: true
     },
     createdAt: {
@@ -21,5 +22,5 @@ const SessionSchema = new Schema<ISession>({
         default: Date.now
     }
 });
-const Session = model<ISession>("Session", SessionSchema);
+const Session = model<SessionModel>("Session", SessionSchema);
 export default Session;

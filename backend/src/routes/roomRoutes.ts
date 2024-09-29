@@ -116,7 +116,7 @@ router.get("", getRooms);
  * /rooms/{roomId}:
  *   delete:
  *     summary: Delete a room
- *     description: Delete a room by a specified room ID.
+ *     description: Delete a room by the specified room ID.
  *     tags: 
  *       - Rooms
  *     security:
