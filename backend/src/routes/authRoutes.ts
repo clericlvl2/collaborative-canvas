@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, login, logout } from '../controllers/authController.js';
+import { registerUser, login, logout, logoutFromAllDevices } from '../controllers/authController.js';
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -117,5 +117,24 @@ router.post('/login', login);
  *         description: Server error.
  */
 router.post('/logout', protect, logout);
+
+/**
+ * @swagger
+ * /auth/logout-all-devices:
+ *   post:
+ *     summary: Logout from all devices
+ *     description: Logout a user from all connected devices by the passed token.
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       204:
+ *         description: The sessions were deleted successfully.
+ *       401:
+ *         description: Unauthorized, invalid or missing token.
+ *       500:
+ *         description: Server error.
+ */
+router.post('/logout-all-devices', protect, logoutFromAllDevices);
 
 export default router;

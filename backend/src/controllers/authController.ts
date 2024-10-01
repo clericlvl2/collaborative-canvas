@@ -100,3 +100,24 @@ export const logout = async (req: CustomRequest, res: Response): Promise<void> =
         res.status(500).send("Server error");
     }
 };
+
+export const logoutFromAllDevices = async (req: CustomRequest, res: Response): Promise<void> => {
+    const currentUserId: Types.ObjectId | undefined = req._id;
+
+    try {
+        if (!currentUserId) {
+            res.status(400).send("Empty Current User ID");
+        }
+        const deletedSessions = await Session.deleteMany({ user: currentUserId });
+
+        if (!deletedSessions.deletedCount) {
+            res.status(404).json({ message: "Sessions not found" });
+        }
+
+        res.sendStatus(204);
+    }
+    catch (error: unknown) {
+        logError(error);
+        res.status(500).send("Server error");
+    }
+};

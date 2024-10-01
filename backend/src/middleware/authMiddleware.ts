@@ -15,7 +15,6 @@ export async function protect(req: CustomRequest, res: Response, next: NextFunct
             const token: string = req.headers.authorization.split(' ')[1];
             const session = await Session.findOne({ token });
             const decoded: JwtPayload = jwt.verify(token, config.jwtSecret) as JwtPayload;
-            console.log(session?.user);
             if (session?.user.toString() === decoded?._id) {
                 req._id = decoded._id;
                 next();
