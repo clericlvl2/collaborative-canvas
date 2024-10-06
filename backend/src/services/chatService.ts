@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import Room, { IChatMessage } from "../models/roomModel.js";
+import Room, { ChatMessageModel } from "../models/roomModel.js";
 
-export const handleNewChatMessage = async(roomId: Types.ObjectId, messageData: IChatMessage): Promise<void> => {
+export const handleNewChatMessage = async(roomId: Types.ObjectId, messageData: ChatMessageModel): Promise<void> => {
     try {
         const room = await Room.findById(roomId);
 

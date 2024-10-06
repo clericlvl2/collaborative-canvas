@@ -1,22 +1,22 @@
 import { Schema, model, Types } from "mongoose";
 
-export interface IChatMessage {
+export interface ChatMessageModel {
     message: string;
     sender: Types.ObjectId;
     timestamp?: Date;
 }
 
-export interface IRoom {
+export interface RoomModel {
     name: string;
     owner: Types.ObjectId;
     participants?: Types.ObjectId[];
     canvasData?: string;
     createdAt: Date;
     updatedAt: Date;
-    chatHistory: IChatMessage[];
+    chatHistory: ChatMessageModel[];
 }
 
-const roomSchema = new Schema<IRoom>({
+const roomSchema = new Schema<RoomModel>({
     name: {
         type: String,
         required: true
@@ -58,5 +58,5 @@ const roomSchema = new Schema<IRoom>({
     ]
 });
 
-const Room = model<IRoom>("Room", roomSchema);
+const Room = model<RoomModel>("Room", roomSchema);
 export default Room;

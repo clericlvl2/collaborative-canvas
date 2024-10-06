@@ -3,6 +3,9 @@ import bcrypt  from 'bcryptjs';
 import { generateToken } from '../services/authService.js';
 import Session from '../models/sessionModel.js';
 import { Request, Response } from 'express';
+import { CustomRequest } from '../middleware/authMiddleware.js';
+import { Types } from 'mongoose';
+import { logError } from '../utils/errorProcessor.js';
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     const { name, email, password }: { name: string, email: string, password: string } = req.body;
@@ -27,12 +30,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         });
     }
     catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error(error.message);
-        }
-        else {
-            console.error("Unknown error occured");
-        }
+        logError(error);
         res.status(500).send('Server error');
     }
 };
@@ -65,16 +63,61 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 name: user.name,
                 email: user.email
             },
-            token: token
+            token
         });
     }
     catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error(error.message);
+        logError(error);
+        res.status(500).send('Server error');
+    }
+};
+
+export const logout = async (req: CustomRequest, res: Response): Promise<void> => {
+    const currentUserId: Types.ObjectId | undefined = req._id;
+
+    try {
+        if (!currentUserId) {
+            res.status(400).send("Empty Current User ID");
+        }
+
+        if (req.headers.authorization) {
+            const token: string = req.headers.authorization.split(' ')[1];
+
+            const deletedSession = await Session.findOneAndDelete({ token });
+
+            if (!deletedSession) {
+                res.status(404).json({ message: "Session not found" });
+            }
+
+            res.sendStatus(204);
         }
         else {
-            console.error("Unknown error occured");
+            res.status(401).json({ message: 'Not authorized, no token' });
         }
-        res.status(500).send('Server error');
+    }
+    catch (error: unknown) {
+        logError(error);
+        res.status(500).send("Server error");
+    }
+};
+
+export const logoutFromAllDevices = async (req: CustomRequest, res: Response): Promise<void> => {
+    const currentUserId: Types.ObjectId | undefined = req._id;
+
+    try {
+        if (!currentUserId) {
+            res.status(400).send("Empty Current User ID");
+        }
+        const deletedSessions = await Session.deleteMany({ user: currentUserId });
+
+        if (!deletedSessions.deletedCount) {
+            res.status(404).json({ message: "Sessions not found" });
+        }
+
+        res.sendStatus(204);
+    }
+    catch (error: unknown) {
+        logError(error);
+        res.status(500).send("Server error");
     }
 };

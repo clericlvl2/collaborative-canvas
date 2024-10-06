@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import Room, { IRoom } from "../models/roomModel.js";
+import Room, { RoomModel } from "../models/roomModel.js";
 
-export const getRoomStateFromDB = async(roomId: Types.ObjectId): Promise<IRoom> => {
+export const getRoomStateFromDB = async(roomId: Types.ObjectId): Promise<RoomModel> => {
     try {
         const room = await Room.findById(roomId);
 

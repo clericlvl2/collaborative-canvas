@@ -1,10 +1,10 @@
 import { Types } from "mongoose";
 import { handleNewChatMessage } from "../services/chatService.js";
 import { Server, Socket } from 'socket.io';
-import { IChatMessage } from "../models/roomModel.js";
+import { ChatMessageModel } from "../models/roomModel.js";
 
 export default function handleChatSockets(io: Server, socket: Socket): void {
-    socket.on("chatMessage", async ({ roomId, messageData }: { roomId: Types.ObjectId, messageData: IChatMessage } ) => { 
+    socket.on("chatMessage", async ({ roomId, messageData }: { roomId: Types.ObjectId, messageData: ChatMessageModel } ) => { 
         try {
             await handleNewChatMessage(roomId, messageData);
             const roomIdStr = roomId.toString();

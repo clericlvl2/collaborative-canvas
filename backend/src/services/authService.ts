@@ -1,9 +1,9 @@
-import Session, { ISession } from "../models/sessionModel.js";
+import Session, { SessionModel } from "../models/sessionModel.js";
 import jwt from 'jsonwebtoken';
 import config from '../config/env.js';
 import { Types } from "mongoose";
 
-export const createSession = async (userId: string, token: string): Promise<ISession | void> => {
+export const createSession = async (userId: string, token: string): Promise<SessionModel | void> => {
     try {
         const session = await Session.create({ userId, token });
         return session;
@@ -15,7 +15,7 @@ export const createSession = async (userId: string, token: string): Promise<ISes
     }
 };
 
-export const removeSession = async (token: string): Promise<ISession> => {
+export const removeSession = async (token: string): Promise<SessionModel> => {
     const session = await Session.findOneAndDelete({ token });
     if (!session) {
         throw new Error("Session not found");
