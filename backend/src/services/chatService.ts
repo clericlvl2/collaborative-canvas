@@ -1,25 +1,18 @@
 import { Types } from "mongoose";
 import Room, { ChatMessageModel } from "../models/roomModel.js";
 
-export const handleNewChatMessage = async(roomId: Types.ObjectId, messageData: ChatMessageModel): Promise<void> => {
-    try {
-        const room = await Room.findById(roomId);
+export const handleNewChatMessage = async(roomId: Types.ObjectId, message: string, sender: Types.ObjectId): Promise<ChatMessageModel> => {
+    const room = await Room.findById(roomId);
 
-        if (!room) {
-            throw new Error("Room not found");
-        }
-
-        room.chatHistory.push(messageData);
-
-        await room.save();
+    if (!room) {
+        throw new Error("Room not found");
     }
-    catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error("Error saving chat message: ", error.message);
-        }
-        else {
-            console.error("Unknow error occured");
-        }
-        throw error;
-    }
+    const messageData: ChatMessageModel = {
+        message,
+        sender
+    };
+    room.chatHistory.push(messageData);
+
+    await room.save();
+    return messageData;
 };

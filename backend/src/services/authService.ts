@@ -24,5 +24,5 @@ export const removeSession = async (token: string): Promise<SessionModel> => {
 };
 
 export const generateToken = (_id: Types.ObjectId): string => jwt.sign({ _id }, config.jwtSecret, {
-    expiresIn: '1h'
+    expiresIn: '1d'
 });
