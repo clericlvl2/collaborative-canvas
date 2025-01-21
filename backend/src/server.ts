@@ -14,7 +14,7 @@ connectDB(MONGO_URI);
 
 const app: Application = express();
 app.use(express.json());
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 
 setupSockets(app, IO_PORT);
