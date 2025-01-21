@@ -31,9 +31,9 @@ export default function swaggerDocs(app: Application): void {
         },
         apis: ["./dist/routes/*.js"]
     };
-    
+
     const swaggerSpec: swaggerUi.JsonObject = swaggerJSDoc(options);
-    
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    console.log("Swagger docs available at /api-docs");
+
+    app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    console.log("Swagger docs available at /api/docs");
 };

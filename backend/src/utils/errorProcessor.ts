@@ -1,6 +1,6 @@
-export const logError = (error: unknown): void => {
+export const logError = (error: unknown, message?: string): void => {
     if (error instanceof Error) {
-        console.error(error.message);
+        console.error(message + error.message);
     }
     else {
         console.error("Unknown error occured");

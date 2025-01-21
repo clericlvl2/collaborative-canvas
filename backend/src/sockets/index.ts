@@ -1,10 +1,19 @@
-import http from "http";
-import { Server } from "socket.io";
+import http, { IncomingMessage } from "http";
+import { Server, Socket } from "socket.io";
 import handleRoomSockets from "./roomSocket.js";
 import handleCanvasSockets from "./canvasSocket.js";
 import handleChatSockets from "./chatSocket.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { Application } from "express";
+import { Types } from "mongoose";
+
+export interface CustomSocket extends Socket {
+    request: CustomIncomingMessage;
+}
+
+export interface CustomIncomingMessage extends IncomingMessage {
+    _id?: Types.ObjectId;
+}
 
 export default function setupSockets(app: Application, ioPort: number): void {
     const server = http.createServer(app);
