@@ -1,13 +1,5 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { useLocation } from 'react-router-dom';
+import BoardView from '../components/Board/Board';
 
 export function Board() {
-    const { state } = useLocation();
-
-    return (
-        <Box>
-            <Typography>Welcome to collaborative board #{state.id}</Typography>
-        </Box>
-    );
+    return <BoardView />;
 }

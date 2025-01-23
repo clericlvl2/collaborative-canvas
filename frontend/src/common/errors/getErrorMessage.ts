@@ -1,9 +1,10 @@
 import { AxiosError } from 'axios';
 
 import { ERROR_MESSAGE } from '../constants';
+import { instanceOfConditionError } from './ConditionError';
 import { instanceOfHTTPError } from './HTTPError';
 
-export const formatErrorMessage = (message: string, status?: number) =>
+const formatErrorMessage = (message: string, status?: number) =>
     message && status ? `${message} (${status})` : message;
 
 export const getErrorMessage = (e: unknown): string => {
@@ -14,6 +15,8 @@ export const getErrorMessage = (e: unknown): string => {
         return formatErrorMessage(message, status);
     } else if (instanceOfHTTPError(e)) {
         return formatErrorMessage(e.message, e.status);
+    } else if (instanceOfConditionError(e)) {
+        return '';
     } else if (e instanceof Error) {
         return e.message;
     } else {

@@ -4,9 +4,9 @@ import RoomsAPI from '../../api/RoomsAPI';
 import type { ICreateRoomParams, IRoom, IRooms } from '../../api/shared/types';
 import { ERROR_MESSAGE } from '../../common/constants';
 import { RequestStatus } from '../../common/enums';
-import { selectAuthStatus } from '../auth/auth';
 import type { IThunkApiConfig } from '../types';
 import { getSerializableError } from '../utils';
+import { selectRoomsStatus } from './rooms';
 
 type IRoomId = IRoom['id'];
 
@@ -23,7 +23,7 @@ export const fetchRooms = createAsyncThunk<IRooms, void, IThunkApiConfig>(
     },
     {
         condition: (_, thunkApi) => {
-            const status = selectAuthStatus(thunkApi.getState());
+            const status = selectRoomsStatus(thunkApi.getState());
 
             if (status !== RequestStatus.Idle) {
                 return false;

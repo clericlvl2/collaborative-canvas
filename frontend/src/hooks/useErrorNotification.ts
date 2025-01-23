@@ -12,7 +12,13 @@ export const useErrorNotification = () => {
     const { show } = useNotifications();
 
     const showError = useCallback(
-        (message: string) => show(message, ERROR_NOTIFICATION_OPTIONS),
+        (message: string) => {
+            const hasMessage = Boolean(message.trim());
+
+            if (hasMessage) {
+                show(message, ERROR_NOTIFICATION_OPTIONS);
+            }
+        },
         [show]
     );
 

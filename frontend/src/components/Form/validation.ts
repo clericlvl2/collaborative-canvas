@@ -35,3 +35,8 @@ export const createRoomSchema = object({
         .min(2, 'Must be 2 characters or more')
         .required('Title is required'),
 });
+
+// TODO add message form restrictions
+export const chatMessageSchema = object({
+    message: string(),
+});

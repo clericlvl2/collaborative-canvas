@@ -5,13 +5,15 @@ import {
     StorageKey,
 } from '../../services/LocalStorageService';
 import type { IRootState } from '../store';
-import { executeLogin } from './actions';
-import { loggedOut } from './auth';
+import { executeLogin, executeLogOut } from './actions';
+import { loggedOutSync } from './auth';
 
 export const authMiddleware: Middleware<Record<string, unknown>, IRootState> =
     () => next => action => {
         const isLoginAction = executeLogin.fulfilled.match(action);
-        const isLogoutAction = loggedOut.match(action);
+        const isLogoutAction =
+            executeLogOut.fulfilled.match(action) ||
+            loggedOutSync.match(action);
 
         if (isLoginAction) {
             const { user, token } = action.payload;

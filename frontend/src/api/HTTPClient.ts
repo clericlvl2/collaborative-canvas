@@ -4,10 +4,6 @@ import axios, {
     type InternalAxiosRequestConfig,
 } from 'axios';
 
-import {
-    LocalStorageService,
-    StorageKey,
-} from '../services/LocalStorageService';
 import { BASE_API_URL } from './shared/constants';
 
 export interface IClientOptions {
@@ -17,17 +13,22 @@ export interface IClientOptions {
 type IRequestInterceptor = AxiosInterceptorManager<InternalAxiosRequestConfig>;
 type IRequestInterceptorParameters = Parameters<IRequestInterceptor['use']>;
 
+export type HTTPClientInstance = typeof client;
+
 class HTTPClient {
+    public post: AxiosInstance['post'];
+    public get: AxiosInstance['get'];
+    public delete: AxiosInstance['delete'];
     private readonly _instance: AxiosInstance = axios.create({
         baseURL: BASE_API_URL,
     });
 
     constructor({ baseURL }: IClientOptions) {
         this._instance = axios.create({ baseURL });
-    }
 
-    getClient() {
-        return this._instance;
+        this.post = this._instance.post;
+        this.get = this._instance.get;
+        this.delete = this._instance.delete;
     }
 
     setRequestInterceptor(
@@ -42,27 +43,8 @@ class HTTPClient {
     }
 }
 
-const setAuthorizationInterceptor = (httpClient: HTTPClient) => {
-    httpClient.setRequestInterceptor(
-        config => {
-            const token = LocalStorageService.get(StorageKey.Token);
-
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
-};
-
 const client = new HTTPClient({
     baseURL: BASE_API_URL,
 });
-
-setAuthorizationInterceptor(client);
 
 export default client;
