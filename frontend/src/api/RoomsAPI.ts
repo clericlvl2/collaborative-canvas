@@ -1,6 +1,4 @@
-import { type AxiosInstance } from 'axios';
-
-import HTTPClient from './HTTPClient';
+import HTTPClient, { type HTTPClientInstance } from './HTTPClient';
 import { Endpoint } from './shared/enums';
 import { mapData, Mapper } from './shared/mapper';
 import type {
@@ -12,11 +10,11 @@ import type {
 } from './shared/types';
 
 interface IRoomsAPIOptions {
-    httpClient: AxiosInstance;
+    httpClient: HTTPClientInstance;
 }
 
 class RoomsAPI {
-    private readonly _httpClient: AxiosInstance;
+    private readonly _httpClient: HTTPClientInstance;
 
     constructor({ httpClient }: IRoomsAPIOptions) {
         this._httpClient = httpClient;
@@ -46,8 +44,6 @@ class RoomsAPI {
     }
 }
 
-const api = new RoomsAPI({
-    httpClient: HTTPClient.getClient(),
-});
+const api = new RoomsAPI({ httpClient: HTTPClient });
 
 export default api;

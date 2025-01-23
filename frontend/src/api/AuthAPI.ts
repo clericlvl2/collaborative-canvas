@@ -1,6 +1,8 @@
-import { type AxiosInstance } from 'axios';
-
-import HTTPClient from './HTTPClient';
+import {
+    LocalStorageService,
+    StorageKey,
+} from '../services/LocalStorageService';
+import HTTPClient, { type HTTPClientInstance } from './HTTPClient';
 import { Endpoint } from './shared/enums';
 import { mapData, Mapper } from './shared/mapper';
 import type {
@@ -11,8 +13,16 @@ import type {
     IUserAuthenticationData,
 } from './shared/types';
 
+interface IAuthAPIOptions {
+    httpClient: HTTPClientInstance;
+}
+
 class AuthAPI {
-    private readonly _httpClient: AxiosInstance = HTTPClient.getClient();
+    private readonly _httpClient: HTTPClientInstance;
+
+    constructor({ httpClient }: IAuthAPIOptions) {
+        this._httpClient = httpClient;
+    }
 
     async signIn(data: ILoginParams): Promise<IUserAuthenticationData> {
         const response = await this._httpClient.post<ILoginResponse>(
@@ -34,8 +44,31 @@ class AuthAPI {
 
         return mapData(response.data.user, Mapper.User);
     }
+
+    async logOut(): Promise<void> {
+        await this._httpClient.post<ILoginResponse>(Endpoint.LogOut);
+    }
+
+    setAuthorizationInterceptor() {
+        this._httpClient.setRequestInterceptor(
+            config => {
+                const token = LocalStorageService.get(StorageKey.Token);
+
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+
+                return config;
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        );
+    }
 }
 
-const api = new AuthAPI();
+const api = new AuthAPI({ httpClient: HTTPClient });
+
+api.setAuthorizationInterceptor();
 
 export default api;

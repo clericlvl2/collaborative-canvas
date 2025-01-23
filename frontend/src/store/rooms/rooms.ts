@@ -9,13 +9,13 @@ import { createRoom, deleteRoom, fetchRooms } from './actions';
 
 type IRoomId = IRoom['id'];
 
-export interface RoomsState {
+export interface IRoomsState {
     rooms: IRooms;
     status: RequestStatus;
     error: INullable<string>;
 }
 
-const INITIAL_STATE: RoomsState = {
+const INITIAL_STATE: IRoomsState = {
     rooms: [],
     status: RequestStatus.Idle,
     error: null,
@@ -72,7 +72,7 @@ export const roomsSlice = createSlice({
     },
     selectors: {
         selectAllRooms: state => state.rooms,
-        selectRoomById: (state: RoomsState, roomId: IRoomId) =>
+        selectRoomById: (state: IRoomsState, roomId: IRoomId) =>
             state.rooms.find(room => room.id === roomId),
         selectRoomsStatus: state => state.status,
         selectRoomsError: state => state.error,

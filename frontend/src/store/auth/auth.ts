@@ -8,7 +8,7 @@ import {
     LocalStorageService,
     StorageKey,
 } from '../../services/LocalStorageService';
-import { executeLogin, executeRegister } from './actions';
+import { executeLogin, executeLogOut, executeRegister } from './actions';
 
 interface IAuthState {
     token: INullable<string>;
@@ -33,7 +33,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: createInitialState(),
     reducers: {
-        loggedOut: state => {
+        loggedOutSync: state => {
             state.user = null;
             state.token = null;
         },
@@ -69,6 +69,22 @@ const authSlice = createSlice({
             .addCase(executeRegister.rejected, (state, action) => {
                 state.status = RequestStatus.Failed;
                 state.error = getErrorMessage(action.payload);
+            })
+
+            // Logout
+            .addCase(executeLogOut.fulfilled, state => {
+                state.status = RequestStatus.Completed;
+                state.error = null;
+                state.user = null;
+                state.token = null;
+            })
+            .addCase(executeLogOut.pending, state => {
+                state.status = RequestStatus.Loading;
+                state.error = null;
+            })
+            .addCase(executeLogOut.rejected, (state, action) => {
+                state.status = RequestStatus.Failed;
+                state.error = getErrorMessage(action.payload);
             });
     },
     selectors: {
@@ -81,6 +97,6 @@ const authSlice = createSlice({
 
 export const { selectUser, selectToken, selectAuthStatus, selectAuthError } =
     authSlice.selectors;
-export const { loggedOut } = authSlice.actions;
+export const { loggedOutSync } = authSlice.actions;
 
 export default authSlice.reducer;

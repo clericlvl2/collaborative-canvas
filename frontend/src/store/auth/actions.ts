@@ -25,6 +25,19 @@ export const executeLogin = createAsyncThunk<
     }
 });
 
+export const executeLogOut = createAsyncThunk<void, void, IThunkApiConfig>(
+    'auth/logout',
+    async (_, thunkApi) => {
+        try {
+            return await AuthAPI.logOut();
+        } catch (e) {
+            const error = getSerializableError(e, ERROR_MESSAGE.LOGOUT);
+
+            return thunkApi.rejectWithValue(error);
+        }
+    }
+);
+
 export const executeRegister = createAsyncThunk<
     IUser,
     IRegisterParams,

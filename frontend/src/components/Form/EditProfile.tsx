@@ -12,8 +12,11 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import type { InferType } from 'yup';
 
+import { getErrorMessage } from '../../common/errors/getErrorMessage';
+import { useErrorNotification } from '../../hooks/useErrorNotification';
 import { PagesRoutes } from '../../router/pages';
-import { loggedOut, selectUser } from '../../store/auth/auth';
+import { executeLogOut } from '../../store/auth/actions';
+import { selectUser } from '../../store/auth/auth';
 import { useAppDispatch } from '../../store/hooks';
 import { EDIT_PROFILE_INPUTS } from './inputConfig';
 import { TextFieldConnected } from './TextFieldConnected';
@@ -26,6 +29,7 @@ function EditProfile() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user = useSelector(selectUser);
+    const showError = useErrorNotification();
 
     const initialUser = useMemo(
         () => ({
@@ -35,9 +39,14 @@ function EditProfile() {
         [user]
     );
 
-    const handleSignOut = () => {
-        dispatch(loggedOut());
-        navigate(PagesRoutes.SignIn);
+    // TODO not sure about waiting for async logout, think about it
+    const handleSignOut = async () => {
+        try {
+            await dispatch(executeLogOut()).unwrap();
+            navigate(PagesRoutes.SignIn);
+        } catch (e) {
+            showError(getErrorMessage(e));
+        }
     };
 
     const handleSubmit: IOnSubmitUserCallback = async () => {
