@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
     readonly VITE_REACT_APP_API_URL: string;
+    readonly VITE_REACT_APP_SOCKET_URL: string;
 }
 
 interface ImportMeta {
