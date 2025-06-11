@@ -2,12 +2,12 @@ import { useCallback, useEffect } from 'react';
 import { useParams } from 'react-router';
 
 import { SocketEvent, useSocketClient } from '@shared/api';
-import { extractErrorMessage, useErrorNotification } from '@shared/lib';
+import { extractErrorMessage, instanceOfHttpError, useErrorNotification } from '@shared/lib';
 import { useAppDispatch, useAppSelector } from '@shared/store';
 
 import { socketMessageMapper } from '../api/mapper';
 import { IChatMessageEventPayload } from '../api/types';
-import { messageSent, messagesRemoved, messageStatusChanged, selectAllMessages } from '../model/store';
+import { messageSent, messageStatusChanged, selectAllMessages } from '../model/store';
 import { IMessage, MessageStatus } from '../model/types';
 
 export const useMessagesConnect = () => {
@@ -27,9 +27,13 @@ export const useMessagesConnect = () => {
     );
 
     const sendMessage = useCallback(
-        async (sender: string, message: string) => {
+        async (authorId: string, authorName: string, message: string) => {
             const messageItem = {
-                ...socketMessageMapper({ sender, message }),
+                ...socketMessageMapper({
+                    sender: authorId,
+                    senderName: authorName,
+                    message,
+                }),
                 status: MessageStatus.Pending,
             };
             const messageId = messageItem.id;
@@ -52,19 +56,12 @@ export const useMessagesConnect = () => {
                     status: MessageStatus.Error,
                 }));
 
-                showError(extractErrorMessage(e));
+                if (instanceOfHttpError(e)) {
+                    showError(extractErrorMessage(e));
+                }
             }
         },
         [dispatch, socketClient, boardId, showError]
-    );
-
-    useEffect(
-        () => {
-            return () => {
-                dispatch(messagesRemoved());
-            };
-        },
-        [dispatch]
     );
 
     useEffect(

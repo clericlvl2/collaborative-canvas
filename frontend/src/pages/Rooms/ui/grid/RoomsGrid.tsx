@@ -57,14 +57,14 @@ export function RoomsGrid() {
             }}
         >
             <>
+                <RoomsGridItem>
+                    <RoomCreationCard />
+                </RoomsGridItem>
                 {rooms.map(room => (
                     <RoomsGridItem key={room.id}>
                         <RoomCard id={room.id} title={room.name} />
                     </RoomsGridItem>
                 ))}
-                <RoomsGridItem>
-                    <RoomCreationCard />
-                </RoomsGridItem>
             </>
         </Grid>
     );

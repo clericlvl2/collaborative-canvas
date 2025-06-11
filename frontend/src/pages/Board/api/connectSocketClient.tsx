@@ -1,4 +1,4 @@
-import { type ComponentType } from 'react';
+import { type ComponentType, useMemo } from 'react';
 
 import { useUser } from '@entities/user';
 import { SocketClientProvider } from '@shared/api';
@@ -6,10 +6,18 @@ import { SocketClientProvider } from '@shared/api';
 export const connectSocketClient = <P extends Record<string, unknown>>(
     Component: ComponentType<P>
 ) => (props: P) => {
-    const { token } = useUser();
+    const { user, token } = useUser();
+
+    const socketClientOptions = useMemo(() => ({
+        autoConnect: false,
+        auth: {
+            token,
+            name: user?.name ?? null,
+        },
+    }), [token, user?.name]);
 
     return (
-        <SocketClientProvider token={token}>
+        <SocketClientProvider options={socketClientOptions}>
             <Component {...props} />
         </SocketClientProvider>
     );

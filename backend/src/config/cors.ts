@@ -1,11 +1,11 @@
 import cors from "cors";
 import { Application } from "express";
 
-export default function setupCors(app: Application): void {
-    const allowedOrigins = ["http://localhost:*"];
+const CORS_ORIGIN_REGEX = /^http:\/\/localhost:\d+$/;
 
+export default function setupCors(app: Application): void {
     const corsOptions: cors.CorsOptions = {
-        origin: allowedOrigins,
+        origin: CORS_ORIGIN_REGEX,
         credentials: true
     };
 

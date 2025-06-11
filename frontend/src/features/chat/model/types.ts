@@ -9,8 +9,9 @@ export enum MessageStatus {
 
 export interface IMessage {
     id: TMessageId;
-    text: string;
-    user: string;
+    content: string;
+    authorId: string;
+    authorName: string;
     timestamp: string;
     status?: MessageStatus;
 }

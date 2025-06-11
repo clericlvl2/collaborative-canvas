@@ -2,18 +2,43 @@ import { Types } from "mongoose";
 import { handleNewChatMessage } from "../services/chatService.js";
 import { Server } from 'socket.io';
 import { logError } from "../utils/errorProcessor.js";
-import { CustomSocket } from "./index.js";
+import type { TSocket } from './types.js';
 
-export default function handleChatSockets(io: Server, socket: CustomSocket): void {
-    socket.on("chatMessage", async ({ roomId, message }: { roomId: Types.ObjectId, message: string }) => { 
+interface IAckCallbackPayload {
+  result: 'success' | 'error';
+}
+
+interface IChatMessageEventPayload {
+    roomId: Types.ObjectId,
+    message: string
+}
+
+export default function setupChatSockets(io: Server, socket: TSocket): void {
+    socket.on("chatMessage", async (
+        payload: IChatMessageEventPayload,
+        ackCallback: (payload: IAckCallbackPayload) => void
+    ) => {
         try {
-            const userId = socket.request._id as Types.ObjectId;
-            const messageData = await handleNewChatMessage(roomId, message, userId);
+            const { roomId, message } = payload;
+            const userId = socket.data.userId as Types.ObjectId;
+            const username = socket.data.username as string;
+
+            const messageData = await handleNewChatMessage({
+                roomId,
+                message,
+                senderName: username,
+                sender: userId
+            });
+
             const roomIdStr = roomId.toString();
+
             socket.to(roomIdStr).emit("chatMessage", messageData);
+            ackCallback({ result: 'success' })
         }
         catch (error: unknown) {
             logError(error, "Error sending chat message: ");
+            ackCallback({ result: 'error' })
+
             if (error instanceof Error) {
                 socket.emit("exception", error.message);
             }

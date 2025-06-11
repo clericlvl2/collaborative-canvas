@@ -13,12 +13,14 @@ const IO_PORT: number = config.ioPort;
 connectDB(MONGO_URI);
 
 const app: Application = express();
+
+setupCors(app);
+setupSockets(app, IO_PORT);
+
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 
-setupSockets(app, IO_PORT);
 swaggerDocs(app);
-setupCors(app);
 
 export default app;

@@ -2,6 +2,7 @@ import { Schema, model, Types } from "mongoose";
 
 export interface ChatMessageModel {
     message: string;
+    senderName: string;
     sender: Types.ObjectId;
     timestamp?: Date;
 }

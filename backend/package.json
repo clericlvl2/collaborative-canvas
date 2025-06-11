@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha --require @babel/register",
+    "test": "mocha",
     "start": "node dist/index.js",
     "build": "tsc",
     "dev:start": "node --inspect dist/index.js",

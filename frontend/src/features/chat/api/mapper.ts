@@ -1,16 +1,14 @@
+import type { IChatMessageEventPayload } from './types';
 import type { IMessage } from '../model/types';
-
-interface ISocketMessage {
-    sender: string;
-    message: string;
-}
 
 export const socketMessageMapper = ({
     sender,
+    senderName,
     message,
-}: ISocketMessage): IMessage => ({
+}: IChatMessageEventPayload): IMessage => ({
     id: String(Math.random()),
-    user: sender,
-    text: message,
+    authorName: senderName,
+    content: message,
+    authorId: sender,
     timestamp: new Date().toLocaleTimeString(),
 });

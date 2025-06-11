@@ -2,12 +2,14 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { expect } from "chai";
 import ioClient from "socket.io-client";
-import handleRoomSockets from "../sockets/roomSocket.js";
+import setupRoomSockets from "../dist/sockets/roomSocket.js";
 
-describe("Socket.io Room Sockets", () => {
+// TODO dist
+// TODO mongoose objectid
+describe("Socket.io Room Sockets", function() {
     let io, serverSocket, clientSocket;
 
-    before((done) => {
+    before(function(done) {
         const httpServer = createServer();
         io = new Server(httpServer);
         httpServer.listen(() => {
@@ -16,14 +18,14 @@ describe("Socket.io Room Sockets", () => {
 
             io.on("connection", (socket) => {
                 serverSocket = socket;
-                handleRoomSockets(io, socket);
+                setupRoomSockets(io, socket);
             });
 
             clientSocket.on("connect", done);
         });
     });
 
-    it("should join a room", (done) => {
+    it("should join a room", function(done) {
         const roomId = "123";
         const userId = "456";
 
@@ -35,7 +37,7 @@ describe("Socket.io Room Sockets", () => {
         });
     });
 
-    it("should leave a room", (done) => {
+    it("should leave a room", function(done) {
         const roomId = "123";
         const userId = "456";
 
@@ -47,7 +49,7 @@ describe("Socket.io Room Sockets", () => {
         });
     });
 
-    after(() => {
+    after(function() {
         io.close();
         clientSocket.close();
     });

@@ -1,7 +1,7 @@
 import type { TNullable } from '@shared/lib';
 
 import { type ReactNode, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { io, type ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
 
 import { BASE_SOCKET_URL } from '@shared/api';
 
@@ -9,31 +9,28 @@ import { SocketClientContext } from './SocketClientContext';
 
 interface ISocketProviderProps {
     children: ReactNode;
-    token: TNullable<string>;
+    options: TSocketClientOptions;
 }
 
-const getSocketClientOptions = (token: TNullable<string>) => ({
-    autoConnect: false,
-    auth: {
-        token,
-    },
-    transportOptions: {
-        polling: {
-            extraHeaders: {
-                Authorization: `Bearer ${token}`,
-            },
-        },
-    },
-});
+interface ISocketAuthData {
+    token: TNullable<string>;
+    name: TNullable<string>;
+}
+
+type TSocketClientOptions = Partial<
+    ManagerOptions &
+    SocketOptions &
+    { auth?: ISocketAuthData }
+>;
 
 export function SocketClientProvider({
     children,
-    token,
+    options,
 }: ISocketProviderProps) {
     const [socketClient, setSocketClient] = useState<TNullable<Socket>>(null);
 
     useEffect(() => {
-        if (!token) {
+        if (!options?.auth?.token) {
             setSocketClient(null);
         }
 
@@ -41,11 +38,10 @@ export function SocketClientProvider({
             return;
         }
 
-        const socketClientOptions = getSocketClientOptions(token);
-        const client = io(BASE_SOCKET_URL, socketClientOptions);
+        const client = io(BASE_SOCKET_URL, options);
 
         setSocketClient(client);
-    }, [token, socketClient]);
+    }, [options, socketClient]);
 
     return (
         <SocketClientContext.Provider value={socketClient}>
