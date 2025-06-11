@@ -1,9 +1,8 @@
 // eslint-disable-next-line import/no-unassigned-import
 import './root.css';
 
-import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { DialogsProvider, NotificationsProvider } from '@toolpad/core';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

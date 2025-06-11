@@ -1,6 +1,6 @@
 import type { IMessage } from '../model/types';
 
-import { Paper } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 import { MessagesList } from './MessagesList';

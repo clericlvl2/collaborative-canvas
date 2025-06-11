@@ -1,6 +1,6 @@
-import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import { Field, Form, Formik, type FormikHelpers } from 'formik';
 
 import { chatMessageSchema } from '../model/schema';

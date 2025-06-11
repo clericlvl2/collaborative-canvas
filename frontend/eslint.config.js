@@ -73,6 +73,12 @@ export default tseslint.config(
             },
         },
         rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [{ regex: '^@mui/[^/]+$' }],
+                },
+            ],
             'import/first': 'error',
             'import/no-duplicates': 'error',
             'import/newline-after-import': 'error',

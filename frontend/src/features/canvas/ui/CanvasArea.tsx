@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import styled from '@mui/system/styled';
 
 const CanvasBoard = styled('canvas')({
