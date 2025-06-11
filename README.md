@@ -21,7 +21,7 @@ The Collaborative Canvas Project allows multiple users to work on a shared canva
 - Real-time updates
 - User authentication
 - Canvas drawing and editing tools
-- Collaborative features (e.g., chat, user presence)
+- Collaborative features (e.g., chat)
 
 ## Installation
 

@@ -52,6 +52,9 @@ export default tseslint.config(
                 version: 'detect',
             },
         },
+        rules: {
+            'react/display-name': 'off',
+        },
     },
 
     /* imports config */
