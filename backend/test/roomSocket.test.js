@@ -2,9 +2,9 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { expect } from "chai";
 import ioClient from "socket.io-client";
-import setupRoomSockets from "../dist/sockets/roomSocket.js";
+import setupRoomSockets from "../src/sockets/roomSocket.js";
 
-// TODO dist
+// TODO modules
 // TODO mongoose objectid
 describe("Socket.io Room Sockets", function() {
     let io, serverSocket, clientSocket;

@@ -1,0 +1,22 @@
+{
+  "name": "cc-canvas-monorepo",
+  "private": true,
+  "version": "0.0.1",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "precommit:frontend": "cd frontend && npm run lint && npm run test:precommit",
+    "precommit:backend": "cd backend && npm run lint"
+  },
+  "lint-staged": {
+    "frontend/src/**/*.{ts,tsx}": [
+      "npm run precommit:frontend"
+    ],
+    "backend/{src,test}/**/*.{js,ts}": [
+      "npm run precommit:backend"
+    ]
+  }
+}
