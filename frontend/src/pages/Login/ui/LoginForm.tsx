@@ -9,10 +9,11 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Form, Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
 import { loginUser } from '@entities/user';
-import { HOME_ROUTE, ROUTE } from '@shared/config';
+import { HOME_ROUTE, Namespace, ROUTE } from '@shared/config';
 import {
     extractErrorMessage,
     useErrorNotification,
@@ -37,6 +38,7 @@ export function LoginForm() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const showError = useErrorNotification();
+    const { t } = useTranslation();
 
     const handleSubmit: ISubmitHandler = async (formData, helpers) => {
         try {
@@ -90,7 +92,7 @@ export function LoginForm() {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Sign In
+                                {t('sign-in', { ns: Namespace.Auth })}
                             </Button>
                             <Grid container justifyContent="center">
                                 <NavigationLink to={ROUTE.REGISTER}>

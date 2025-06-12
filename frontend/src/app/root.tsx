@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/no-unassigned-import
 import './root.css';
+// eslint-disable-next-line import/no-unassigned-import
+import './i18n';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';

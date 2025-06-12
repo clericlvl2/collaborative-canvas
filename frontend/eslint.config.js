@@ -1,3 +1,4 @@
+import path from 'path';
 import jseslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import globals from 'globals';
@@ -6,6 +7,7 @@ import importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
+import i18nJsonPlugin from 'eslint-plugin-i18n-json';
 
 export default tseslint.config(
     /* Global ignore config */
@@ -96,7 +98,7 @@ export default tseslint.config(
         },
     },
 
-    /* @stylistic/eslint-plugin config */
+    /* stylistic formatter config */
     {
         extends: [
             stylisticPlugin.configs.customize({
@@ -118,6 +120,26 @@ export default tseslint.config(
                 imports: 'always-multiline',
                 dynamicImports: 'always-multiline',
                 exports: 'always-multiline',
+            }],
+        },
+    },
+
+    /* i18n json validator config */
+    {
+        files: ['./src/shared/config/i18n/locales/**/*.json'],
+        plugins: { 'i18n-json': i18nJsonPlugin },
+        processor: {
+            meta: { name: '.json' },
+            ...i18nJsonPlugin.processors['.json'],
+        },
+        rules: {
+            ...i18nJsonPlugin.configs.recommended.rules,
+            'i18n-json/valid-message-syntax': 'off',
+            'i18n-json/identical-keys': ['error', {
+                filePath: {
+                    'auth.json': path.resolve('./src/shared/config/i18n/locales/en/auth.json'),
+                    'common.json': path.resolve('./src/shared/config/i18n/locales/en/common.json'),
+                },
             }],
         },
     }
