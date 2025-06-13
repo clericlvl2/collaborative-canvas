@@ -1,10 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
 import Konva from 'konva';
-import { useCallback } from 'react';
+import { type ForwardedRef, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layer, Stage } from 'react-konva';
 
@@ -13,53 +9,67 @@ import { NamespaceI18N } from '@shared/config';
 import { getEventPointerPosition } from '../lib/getEventPointerPosition';
 import { useContainerSize } from '../lib/useContainerSize';
 import { useDrawing } from '../lib/useDrawing';
+import { ILineData } from '../model/line';
 
+import { ActionPanel } from './ActionPanel';
+import { ClearButton } from './ClearButton';
+import { DrawingContainer } from './DrawingContainer';
 import { LinesGroup } from './LinesGroup';
 
-const DrawingContainer = styled(Paper)(({ theme }) => ({
-    position: 'relative',
-    width: '100%',
-    minHeight: '100%',
-    cursor: 'crosshair',
-    backgroundColor: theme.palette.background.paper,
-    overflow: 'hidden',
-}));
+interface IDrawingBoardProps {
+    onStateChanged: (stringifiedData: string) => Promise<void>;
+}
 
-const ActionPanel = styled(Box)(({ theme }) => ({
-    position: 'absolute',
-    zIndex: 1,
-    top: 0,
-    color: theme.palette.primary.contrastText,
-    margin: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-}));
+export interface IDrawingBoardHandlers {
+    applyState: (data: string) => void;
+}
 
-const ClearButton = styled(Button)({
-    transition: 'opacity 0.2s ease-in-out',
-    opacity: 1,
-    '&:hover': {
-        transform: 'opacity .85',
-    },
-});
+const INITIAL_CONTAINER_PARAMS = {
+    initialWidth: 0,
+    initialHeight: 0,
+};
 
-export function DrawingBoard() {
+export const DrawingBoard = forwardRef((
+    {
+        onStateChanged,
+    }: IDrawingBoardProps,
+    ref: ForwardedRef<IDrawingBoardHandlers>
+) => {
     const { t } = useTranslation();
-    const { containerSize, containerRef } = useContainerSize({
-        initialWidth: 0,
-        initialHeight: 0,
-    });
+    const [membersLines, setMembersLines] = useState<ILineData[]>([]);
+    const {
+        containerSize,
+        containerRef,
+    } = useContainerSize(INITIAL_CONTAINER_PARAMS);
 
     const {
         lines,
         currentLine,
-        drawingState,
         startDrawing,
         continueDrawing,
         finishDrawing,
         clearBoard,
     } = useDrawing();
+
+    useImperativeHandle(
+        ref,
+        () => ({
+            applyState: (serializedData: string) => {
+                const linesData: ILineData[] = JSON.parse(serializedData);
+                setMembersLines(linesData);
+            },
+        }),
+        []
+    );
+
+    useEffect(() => {
+        const onLinesChanged = () => {
+            const serializedLines = JSON.stringify(lines);
+            onStateChanged(serializedLines).catch();
+        };
+
+        onLinesChanged();
+    }, [lines, onStateChanged]);
 
     const handlePointerDown = useCallback(
         (event: Konva.KonvaEventObject<MouseEvent>) => {
@@ -124,7 +134,6 @@ export function DrawingBoard() {
 
     return (
         <DrawingContainer ref={containerRef} variant="outlined">
-            {/* Header */}
             <ActionPanel>
                 <ClearButton
                     variant="contained"
@@ -140,20 +149,25 @@ export function DrawingBoard() {
                 width={containerSize.width}
                 height={containerSize.height}
                 onMouseDown={handlePointerDown}
-                onMousemove={handlePointerMove}
-                onMouseup={handlePointerUp}
+                onMouseMove={handlePointerMove}
+                onMouseUp={handlePointerUp}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
             >
+                {/* Room members layer */}
+                <Layer>
+                    <LinesGroup lines={membersLines} />
+                </Layer>
+
+                {/* User layer */}
                 <Layer>
                     <LinesGroup
                         lines={lines}
                         currentLine={currentLine}
-                        drawingState={drawingState}
                     />
                 </Layer>
             </Stage>
         </DrawingContainer>
     );
-}
+});

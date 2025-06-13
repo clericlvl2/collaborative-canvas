@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
-import { useParams } from 'react-router';
 
 import { SocketEvent, useSocketClient } from '@shared/api';
+import { usePageParams } from '@shared/config';
 import { extractErrorMessage, instanceOfHttpError, useErrorNotification } from '@shared/lib';
 import { useAppDispatch, useAppSelector } from '@shared/store';
 
@@ -10,11 +10,20 @@ import { IChatMessageEventPayload } from '../api/types';
 import { messageSent, messageStatusChanged, selectAllMessages } from '../model/store';
 import { IMessage, MessageStatus } from '../model/types';
 
-export const useMessagesConnect = () => {
+interface IUseMessagesConnectReturn {
+    messages: IMessage[];
+    sendMessage: (
+        authorId: string,
+        authorName: string,
+        message: string
+    ) => Promise<void>;
+}
+
+export const useMessagesConnect = (): IUseMessagesConnectReturn => {
     const dispatch = useAppDispatch();
     const messages = useAppSelector(selectAllMessages);
     const socketClient = useSocketClient();
-    const { boardId } = useParams();
+    const { boardId } = usePageParams();
     const showError = useErrorNotification();
 
     const onMessageReceived = useCallback(
@@ -74,5 +83,5 @@ export const useMessagesConnect = () => {
         [socketClient, onMessageReceived]
     );
 
-    return { messages, sendMessage, onMessageReceived };
+    return { messages, sendMessage };
 };

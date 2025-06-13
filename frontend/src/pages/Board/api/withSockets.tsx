@@ -3,7 +3,7 @@ import { type ComponentType, useMemo } from 'react';
 import { useUser } from '@entities/user';
 import { SocketClientProvider } from '@shared/api';
 
-export const connectSocketClient = <P extends Record<string, unknown>>(
+export const withSockets = <P extends Record<string, unknown>>(
     Component: ComponentType<P>
 ) => (props: P) => {
     const { user, token } = useUser();

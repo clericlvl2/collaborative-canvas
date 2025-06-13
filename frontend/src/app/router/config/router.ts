@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 
 import { NotFound } from '@pages/not-found';
-import { PAGE } from '@shared/config';
+import { PAGE, PageParams } from '@shared/config';
 
 import { HomeRouteRedirect } from '../ui/HomeRouteRedirect';
 import { Page } from '../ui/Page';
@@ -30,7 +30,7 @@ export const appRouter = createBrowserRouter([
                         },
                     },
                     {
-                        path: PAGE.BOARD + '/:boardId',
+                        path: `${PAGE.BOARD}/:${PageParams.BoardId}`,
                         lazy: async () => {
                             const { Board } = await import('@pages/board');
 

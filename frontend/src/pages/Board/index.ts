@@ -1,1 +1,1 @@
-export { SocketConnectedBoard as Board } from './ui/Board';
+export { BoardWithSockets as Board } from './ui/Board';

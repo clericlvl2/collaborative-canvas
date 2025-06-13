@@ -37,10 +37,6 @@ export const useDrawing = (): IUseDrawingReturn => {
             return;
         }
 
-        if (currentLine.length < DRAWING_CONSTANTS.MIN_LINE_POINTS) {
-            return;
-        }
-
         setLines(prev => [...prev, {
             points: currentLine,
             stroke: COLORS.PRIMARY_STROKE,

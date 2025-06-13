@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router';
 
 import { SocketEvent, useSocketClient } from '@shared/api';
+import { usePageParams } from '@shared/config';
 
 export function useRoomConnect() {
     const socketClient = useSocketClient();
-    const { boardId } = useParams();
+    const { boardId } = usePageParams();
 
     useEffect(
         () => {
