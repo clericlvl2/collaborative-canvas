@@ -2,14 +2,17 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-import { Language, Namespace, Translations } from '@shared/config';
+import { Language, NamespaceI18N, Translations } from '@shared/config';
+
+type TTranslations = typeof Translations['En'];
 
 declare module 'i18next' {
     interface CustomTypeOptions {
         defaultNS: 'common';
         resources: {
-            [Namespace.Common]: typeof Translations.En[Namespace.Common];
-            [Namespace.Auth]: typeof Translations.En[Namespace.Auth];
+            [NamespaceI18N.Common]: TTranslations[NamespaceI18N.Common];
+            [NamespaceI18N.Auth]: TTranslations[NamespaceI18N.Auth];
+            [NamespaceI18N.Draw]: TTranslations[NamespaceI18N.Draw];
         };
     }
 }
@@ -19,7 +22,7 @@ i18n
     .use(initReactI18next)
     .init({
         debug: import.meta.env.VITE_REACT_APP_MODE === 'dev',
-        defaultNS: Namespace.Common,
+        defaultNS: NamespaceI18N.Common,
         fallbackLng: Language.EN,
         supportedLngs: [Language.EN, Language.RU],
         resources: {

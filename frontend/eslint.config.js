@@ -139,6 +139,7 @@ export default tseslint.config(
                 filePath: {
                     'auth.json': path.resolve('./src/shared/config/i18n/locales/en/auth.json'),
                     'common.json': path.resolve('./src/shared/config/i18n/locales/en/common.json'),
+                    'draw.json': path.resolve('./src/shared/config/i18n/locales/en/draw.json'),
                 },
             }],
         },

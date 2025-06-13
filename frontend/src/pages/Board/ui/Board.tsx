@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid';
 
-import { CanvasArea } from '@features/canvas';
+import { DrawingBoard } from '@features/canvas';
 import { Chat } from '@features/chat';
 
 import { connectSocketClient } from '../api/connectSocketClient';
@@ -14,7 +14,7 @@ function Board() {
     return (
         <Grid container sx={{ height: '100%' }}>
             <Grid size={8}>
-                <CanvasArea />
+                <DrawingBoard />
             </Grid>
             <Grid size={4}>
                 <Chat />

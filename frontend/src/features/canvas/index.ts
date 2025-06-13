@@ -1,1 +1,1 @@
-export { CanvasArea } from './ui/CanvasArea';
+export { DrawingBoard } from './ui/DrawingBoard';

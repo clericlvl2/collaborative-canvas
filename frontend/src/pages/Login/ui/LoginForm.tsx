@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
 import { loginUser } from '@entities/user';
-import { HOME_ROUTE, Namespace, ROUTE } from '@shared/config';
+import { HOME_ROUTE, NamespaceI18N, ROUTE } from '@shared/config';
 import {
     extractErrorMessage,
     useErrorNotification,
@@ -92,7 +92,7 @@ export function LoginForm() {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                {t('sign-in', { ns: Namespace.Auth })}
+                                {t('sign-in', { ns: NamespaceI18N.Auth })}
                             </Button>
                             <Grid container justifyContent="center">
                                 <NavigationLink to={ROUTE.REGISTER}>
