@@ -21,7 +21,7 @@ i18n
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-        debug: import.meta.env.VITE_REACT_APP_MODE === 'dev',
+        debug: import.meta.env.DEV,
         defaultNS: NamespaceI18N.Common,
         fallbackLng: Language.EN,
         supportedLngs: [Language.EN, Language.RU],

@@ -1,7 +1,12 @@
-const DEV_API_PORT = 5000;
-const DEV_SOCKET_PORT = 3000;
+const Config = {
+    DevBaseUrl: 'http://localhost',
+    Port: {
+        DevApi: 5000,
+        DevSocket: 4000,
+    },
+};
 
-export const BASE_API_URL = import.meta.env.VITE_REACT_APP_API_URL
-    || `http://localhost:${DEV_API_PORT}/api/`;
-export const BASE_SOCKET_URL = import.meta.env.VITE_REACT_APP_SOCKET_URL
-    || `http://localhost:${DEV_SOCKET_PORT}`;
+export const BASE_API_URL = import.meta.env.VITE_APP_API_URL
+    || `${Config.DevBaseUrl}:${Config.Port.DevApi}/api/`;
+export const BASE_SOCKET_URL = import.meta.env.VITE_APP_SOCKET_URL
+    || `${Config.DevBaseUrl}:${Config.Port.DevSocket}`;

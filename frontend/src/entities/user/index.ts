@@ -1,7 +1,7 @@
 export { USER_INPUTS_CONFIGS } from './config/input';
 
 export { loginUser, logoutUser, registerUser } from './model/actions';
-export { authMiddleware } from './model/middleware';
+export { addAuthListeners } from './model/middleware';
 export { USER_SCHEMAS } from './model/schema';
 export { useUser } from './model/useUser';
 export {

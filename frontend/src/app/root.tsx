@@ -11,11 +11,14 @@ import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { RouterProvider } from 'react-router';
 
+import { validateEnv } from '@app/config';
+
 import { getRootElement } from './dom';
 import { setupInterceptor } from './interceptor';
 import { appRouter } from './router';
 import { store } from './store';
 
+validateEnv();
 setupInterceptor();
 
 const root = createRoot(getRootElement());
