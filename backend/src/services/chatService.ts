@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import Room, { ChatMessageModel } from "../models/roomModel.js";
+import Room, { ChatMessageModel } from "../models/roomModel";
 
 interface INewMessageHandlerParams{
     roomId: Types.ObjectId;

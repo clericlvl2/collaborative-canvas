@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import config from '../config/env.js';
+import Config from '../config/env.js';
 import { logError } from '../utils/errorProcessor.js';
 import Session from '../models/sessionModel.js';
 
@@ -14,7 +14,7 @@ export async function verifyUser(token: string): Promise<{
     userId: Types.ObjectId;
 }> {
     const session = await Session.findOne({ token });
-    const decoded: JwtPayload = jwt.verify(token, config.jwtSecret) as JwtPayload;
+    const decoded: JwtPayload = jwt.verify(token, Config.JWTSecret) as JwtPayload;
     const decodedUserId = decoded?._id;
     const isVerified = session?.user.toString() === decodedUserId;
 

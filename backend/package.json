@@ -5,17 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha",
+    "dev": "tsx watch src/index.ts",
     "lint": "eslint",
-    "start": "node dist/index.js",
     "build": "tsc",
-    "dev:start": "node --inspect dist/index.js",
-    "dev:rebuild": "tsc && node --inspect dist/index.js"
+    "start": "node dist/index.js",
+    "test": "tsx --test test/**/*.test.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
@@ -28,23 +23,20 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@babel/register": "^7.27.1",
     "@eslint/js": "^9.28.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
-    "@types/eslint-plugin-mocha": "^10.4.0",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^24.0.1",
+    "@types/node": "^24.9.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.34.0",
-    "chai": "^5.2.0",
     "eslint": "^9.28.0",
-    "eslint-plugin-mocha": "^11.1.0",
     "globals": "^16.2.0",
-    "mocha": "^11.6.0",
     "socket.io-client": "^4.8.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.0"
   }

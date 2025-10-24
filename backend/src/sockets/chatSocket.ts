@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import { handleNewChatMessage } from "../services/chatService.js";
+import { handleNewChatMessage } from "../services/chatService";
 import { Server } from 'socket.io';
-import { logError } from "../utils/errorProcessor.js";
+import { logError } from "../utils/errorProcessor";
 import type { TSocket } from './types.js';
 
 interface IAckCallbackPayload {

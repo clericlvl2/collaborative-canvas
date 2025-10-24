@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import Room, { RoomModel } from "../models/roomModel.js";
+import Room, { RoomModel } from "../models/roomModel";
 
 export const getRoomStateFromDB = async(roomId: Types.ObjectId): Promise<RoomModel> => {
     const room = await Room.findById(roomId);
@@ -8,18 +8,13 @@ export const getRoomStateFromDB = async(roomId: Types.ObjectId): Promise<RoomMod
         throw new Error("Room not found");
     }
 
-    const roomState = {
-        canvasData: room.canvasData,
-        participants: room.participants,
-        chatHistory: room.chatHistory.slice(0, 50),
-        roomName: room.name,
-        createdAt: room.createdAt,
-        roomOwner: room.owner,
-        updatedAt: room.updatedAt,
-        name: room.name,
-        owner: room.owner
-    };
-
-    return roomState;
-
+    return {
+       canvasData: room.canvasData,
+       participants: room.participants,
+       chatHistory: room.chatHistory.slice(0, 50),
+       createdAt: room.createdAt,
+       updatedAt: room.updatedAt,
+       name: room.name,
+       owner: room.owner
+   };
 };
