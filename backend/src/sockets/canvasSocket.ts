@@ -6,8 +6,8 @@ interface CanvasMessage {
     canvasData: string;
 }
 
-export default function handleCanvasSockets(io: Server, socket: Socket) {
-    socket.on("canvasAction", (data: CanvasMessage) => {
-        socket.to(data.roomId.toString()).emit("canvasAction", data.canvasData);
+export default function setupCanvasSockets(io: Server, socket: Socket) {
+    socket.on("canvasAction", ({ roomId, canvasData }: CanvasMessage) => {
+        socket.to(roomId.toString()).emit("canvasAction", canvasData);
     });
 };

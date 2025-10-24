@@ -1,19 +1,10 @@
-import http, { IncomingMessage } from "http";
-import { Server, Socket } from "socket.io";
-import handleRoomSockets from "./roomSocket.js";
-import handleCanvasSockets from "./canvasSocket.js";
-import handleChatSockets from "./chatSocket.js";
-import { protect } from "../middleware/authMiddleware.js";
+import http from "http";
+import { Server } from "socket.io";
+import setupRoomSockets from "./roomSocket";
+import setupCanvasSockets from "./canvasSocket";
+import setupChatSockets from "./chatSocket";
 import { Application } from "express";
-import { Types } from "mongoose";
-
-export interface CustomSocket extends Socket {
-    request: CustomIncomingMessage;
-}
-
-export interface CustomIncomingMessage extends IncomingMessage {
-    _id?: Types.ObjectId;
-}
+import { protect } from './middleware/protect.js';
 
 export default function setupSockets(app: Application, ioPort: number): void {
     const server = http.createServer(app);
@@ -24,14 +15,13 @@ export default function setupSockets(app: Application, ioPort: number): void {
         }
     });
 
-    io.engine.use(protect);
-
+    io.use(protect);
     io.on("connection", (socket) => {
         console.log(`User connected: ${socket.id}`);
 
-        handleRoomSockets(io, socket);
-        handleCanvasSockets(io, socket);
-        handleChatSockets(io, socket);
+        setupRoomSockets(io, socket);
+        setupCanvasSockets(io, socket);
+        setupChatSockets(io, socket);
 
         socket.on("disconnect", () => console.log(`User disconnected: ${socket.id}`));
     });

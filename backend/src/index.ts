@@ -1,7 +1,7 @@
-import config from "./config/env.js";
-import app from "./server.js";
+import Config from "./config/env";
+import app from "./server";
 
-const PORT: number = config.port;
+const PORT: number = Config.Port.Api;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 });

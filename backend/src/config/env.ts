@@ -1,11 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-const config = {
-    port: process.env.PORT ? parseInt(process.env.PORT, 10) : 5000,
-    jwtSecret: process.env.JWT_SECRET || "",
-    mongoUri: process.env.MONGO_URI || "",
-    ioPort: process.env.IO_PORT ? parseInt(process.env.IO_PORT, 10) : 3000
+const Config = {
+    Port: {
+        Api: process.env.API_PORT ? parseInt(process.env.API_PORT, 10) : 5000,
+        Socket: process.env.SOCKET_PORT ? parseInt(process.env.SOCKET_PORT, 10) : 4000,
+    },
+    JWTSecret: process.env.JWT_SECRET || "",
+    DBUri: process.env.DB_URI || ""
 };
 
-export default config;
+export default Config;

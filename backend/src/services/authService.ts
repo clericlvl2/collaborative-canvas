@@ -1,12 +1,11 @@
-import Session, { SessionModel } from "../models/sessionModel.js";
+import Session, { SessionModel } from "../models/sessionModel";
 import jwt from 'jsonwebtoken';
-import config from '../config/env.js';
+import Config from '../config/env.js';
 import { Types } from "mongoose";
 
 export const createSession = async (userId: string, token: string): Promise<SessionModel | void> => {
     try {
-        const session = await Session.create({ userId, token });
-        return session;
+        return Session.create({ userId, token });
     }
     catch (error: unknown) {
         if (error instanceof Error) {
@@ -17,12 +16,14 @@ export const createSession = async (userId: string, token: string): Promise<Sess
 
 export const removeSession = async (token: string): Promise<SessionModel> => {
     const session = await Session.findOneAndDelete({ token });
+
     if (!session) {
         throw new Error("Session not found");
     }
+
     return session;
 };
 
-export const generateToken = (_id: Types.ObjectId): string => jwt.sign({ _id }, config.jwtSecret, {
+export const generateToken = (_id: Types.ObjectId): string => jwt.sign({ _id }, Config.JWTSecret, {
     expiresIn: '1d'
 });
